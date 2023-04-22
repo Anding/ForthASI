@@ -12,8 +12,24 @@ int main()
     int numCameras = 0 ;
 
     printf("Hello World!\n");
+    printf("sizeof(int): %d bytes\n", (int)sizeof(int)); // 4
+    printf("sizeof(long): %d bytes\n", (int)sizeof(long)); // 4
+    printf("sizeof(float): %d bytes\n", (int) sizeof(float)); // 4
+    printf("sizeof(double): %d bytes\n", (int) sizeof(double)); // 8
+    printf("sizeof(ASI_BOOL): %d bytes\n", (int)sizeof(ASI_BOOL)); // 4
+    printf("sizeof(ASI_BAYER_PATTERN): %d bytes\n", (int)sizeof(ASI_BAYER_PATTERN)); // 4  
+    printf("sizeof(ASI_IMG_TYPE): %d bytes\n", (int)sizeof(ASI_IMG_TYPE)); // 4  
+    printf("sizeof(ASI_CAMERA_INFO): %d bytes\n", (int) sizeof(ASI_CAMERA_INFO)); // 8
+    printf("sizeof(ASI_CONTROL_CAPS): %d bytes\n", (int)sizeof(ASI_CONTROL_CAPS)); // 8
+    printf("sizeof(ASI_ID): %d bytes\n", (int)sizeof(ASI_ID)); // 8
+    printf("\n");
+
+    printf("enum ASI_ANTI_DEW_HEATER : %d\n", ASI_ANTI_DEW_HEATER);
+    
+    printf("\n");
     numCameras = ASIGetNumOfConnectedCameras();
     printf("ASIGetNumOfConnectedCameras() returns int: %d\n", numCameras);
+    printf("\n\n");
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
