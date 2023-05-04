@@ -15,7 +15,7 @@ int main()
     printf("sizeof(int): %d bytes\n", (int)sizeof(int)); // 4
     printf("sizeof(long): %d bytes\n", (int)sizeof(long)); // 4
     printf("sizeof(float): %d bytes\n", (int) sizeof(float)); // 4
-    printf("sizeof(double): %d bytes\n", (int) sizeof(double)); // 8
+    printf("sizeof(double): %d bytes\n", (int) sizeof(double)); // 8  BUT camera returns 12 bytes!
     printf("sizeof(ASI_BOOL): %d bytes\n", (int)sizeof(ASI_BOOL)); // 4
     printf("sizeof(ASI_BAYER_PATTERN): %d bytes\n", (int)sizeof(ASI_BAYER_PATTERN)); // 4  
     printf("sizeof(ASI_IMG_TYPE): %d bytes\n", (int)sizeof(ASI_IMG_TYPE)); // 4  

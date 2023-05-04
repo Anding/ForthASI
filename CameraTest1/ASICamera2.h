@@ -131,7 +131,7 @@ typedef struct _ASI_CAMERA_INFO
 	int SupportedBins[16]; //1 means bin1 which is supported by every camera, 2 means bin 2 etc.. 0 is the end of supported binning method
 	ASI_IMG_TYPE SupportedVideoFormat[8]; //this array will content with the support output format type.IMG_END is the end of supported video format
 
-	double PixelSize; //the pixel size of the camera, unit is um. such like 5.6um
+	long double PixelSize; //the pixel size of the camera, unit is um. such like 5.6um  // AR - needs to be 12 bytes
 	ASI_BOOL MechanicalShutter;
 	ASI_BOOL ST4Port;
 	ASI_BOOL IsCoolerCam;

@@ -1,18 +1,17 @@
 \ Forth words directly corresponding to the ASI SDK
 
+\ define an ENUM data-structure with similar syntax to a STRUCTURE
 : BEGIN-ENUM 0 ;
 : END-ENUM drop ;
 : +ENUM dup 1+ swap CONSTANT ;
 
 LIBRARY: ASICamera2.dll
 
-." ASICamera2.dll load address " ASICamera2.dll u. CR
-
 Extern: int "C" ASICloseCamera( int CameraID ) ;
 Extern: int "C" ASIDisableDarkSubtract( int CameraID ) ;
 Extern: int "C" ASIGetCameraProperty( int * ASICameraInfo , int CameraIndex ) ;
 Extern: int "C" ASIGetCameraPropertyByID( int CameraID , int * ASICameraInfo ) ;
-Extern: int "C" ASIGetControlCaps( int CameraID , int ControlIndex , int * ASI_CONTROL_CAPS , int * Value , int * Auto ) ;
+Extern: int "C" ASIGetControlCaps( int CameraID , int ControlIndex , int * ASI_CONTROL_CAPS) ;
 Extern: int "C" ASIGetControlValue( int CameraID , int ASI_CONTROL_TYPE, int * ControlValue , int * ControlAuto ) ;
 Extern: int "C" ASIGetDataAfterExp( int CameraID, unsigned char * ImageBuffer, int ImageBufferSize ) ;
 Extern: int "C" ASIGetExpStatus( int CameraID , int * ASI_EXPOSURE_STATUS ) ;
@@ -36,20 +35,29 @@ Extern: int "C" ASISetStartPos( int CameraID , int StartX , int StartY ) ;
 Extern: int "C" ASIStartExposure( int CameraID, int IsDark ) ;
 Extern: int "C" ASIStopExposure( int CameraID ) ;
 
-.BadExterns CR
-
-: .ASIErrorCode ( n --)
-\ print an ASI error message
+: ASI.Error ( n -- caddr u)
+\ return the ASI text error message
 	CASE
-	0 OF s" SUCCESS" ENDOF
-	1 OF s" INVALID_INDEX" ENDOF
-	2 OF s" INVALID_ID" ENDOF
-	3 OF s" INVALID_CONTROL_TYPE" ENDOF
-	4 OF s" CAMERA_CLOSED" ENDOF	
-	5 OF s" CAMERA_REMOVED" ENDOF		
-	s" OTHER_ERROR"
-	ENDCASE
-	type
+	 0 OF s" SUCCESS" ENDOF
+	 1 OF s" INVALID_INDEX" ENDOF
+	 2 OF s" INVALID_ID" ENDOF
+	 3 OF s" INVALID_CONTROL_TYPE" ENDOF
+	 4 OF s" CAMERA_CLOSED" ENDOF	
+	 5 OF s" CAMERA_REMOVED" ENDOF	
+	 6 OF s" INVALID_PATH" ENDOF
+	 7 OF s" INVALID_FILEFORMAT" ENDOF
+	 8 OF s" INVALID_SIZE" ENDOF
+	 9 OF s" INVALID_IMGTYPE" ENDOF
+	10 OF s" OUTOF_BOUNDARY" ENDOF
+	11 OF s" TIMEOUT" ENDOF
+	12 OF s" INVALID_SEQUENCE" ENDOF
+	13 OF s" BUFFER_TOO_SMALL" ENDOF
+	14 OF s" VIDEO_MODE_ACTIVE" ENDOF
+	15 OF s" EXPOSURE_IN_PROGRESS" ENDOF
+	16 OF s" GENERAL_ERROR" ENDOF
+	17 OF s" INVALID_MODE" ENDOF
+	s" OTHER_ERROR" rot 							( caddr u n)  \ ENDCASE consumes the case selector
+	ENDCASE 
 ;
 
 BEGIN-STRUCTURE ASI_CAMERA_INFO 		\ 240 bytes including padding
@@ -61,7 +69,7 @@ BEGIN-STRUCTURE ASI_CAMERA_INFO 		\ 240 bytes including padding
  4 +FIELD ASI_BAYER_PATTERN
 64 +FIELD ASI_SUPPORTED_BINS
 32 +FIELD ASI_SUPPORTED_VIDEO_FORMAT
- 8 +FIELD ASI_PIXEL_SIZE				\ double
+12 +FIELD ASI_PIXEL_SIZE				\ long double
  4 +FIELD ASI_MECHANICAL_SHUTTER
  4 +FIELD ASI_ST4_PORT
  4 +FIELD ASI_IS_COOLER_CAM
@@ -71,7 +79,6 @@ BEGIN-STRUCTURE ASI_CAMERA_INFO 		\ 240 bytes including padding
  4 +FIELD ASI_BIT_DEPTH
  4 +FIELD ASI_IS_TRIGGER_CAM
 16 +FIELD ASI_CAMERA_INFO_UNUSED
- 4 +FIELD ASI_CAMERA_INFO_PADDING
 END-STRUCTURE
 
 BEGIN-STRUCTURE ASI_CONTROL_CAPS		\ 248 bytes
@@ -146,6 +153,7 @@ ASI_CAMERA_INFO	BUFFER: ASICameraInfo
 ASI_CONTROL_CAPS	BUFFER: ASIControlCaps
 ASI_ID				BUFFER: ASIID
 ASI_ID				BUFFER: ASISN
+VARIABLE CameraID
 VARIABLE ASINumberOfControls
 VARIABLE ControlValue
 VARIABLE ControlAuto
