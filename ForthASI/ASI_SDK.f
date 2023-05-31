@@ -21,7 +21,7 @@ Extern: int "C" ASIGetNumOfConnectedCameras( void ) ;
 Extern: int "C" ASIGetNumOfControls( int CameraID , int * ASINumberOfControls) ;
 Extern: int "C" ASIGetROIFormat( int CameraID , int * Width , int * Height , int * Bin , int * ASI_IMG_TYPE ) ;
 Extern: char * "C" ASIGetSDKVersion( ) ;
-Extern: int "C" ASIGetSerialNumber( int * ASI_SN) ;
+Extern: int "C" ASIGetSerialNumber( int CameraID , int * ASI_SN) ;
 Extern: int "C" ASIGetStartPos( int CameraID , int * StartX, * StartY) ;
 Extern: int "C" ASIInitCamera( int CameraID ) ;
 Extern: int "C" ASIOpenCamera( int CameraID ) ;
