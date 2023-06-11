@@ -26,6 +26,8 @@ CR
 
 : prepareBuffer ( --)
 \ prepare an XISF image buffer
+	3096 ImageWidth !
+	2080 ImageHeight !
 	XISFBuffer XISF.StartHeader
 		XISF.StartXML
 			XISF.StartImage

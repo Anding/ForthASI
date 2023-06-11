@@ -1,9 +1,6 @@
 \ Forth words directly corresponding to the ASI SDK
+\ requires ForthBase.f
 
-\ define an ENUM data-structure with similar syntax to a STRUCTURE
-: BEGIN-ENUM 0 ;
-: END-ENUM drop ;
-: +ENUM dup 1+ swap CONSTANT ;
 
 LIBRARY: ASICamera2.dll
 
