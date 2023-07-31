@@ -1,6 +1,8 @@
 \ test for ASI_SDK.f
 \ requires XISF.f
 
+XISF_BUFFER BUFFER XISFBuffer
+
 : TAB
 	9 emit
 ;
