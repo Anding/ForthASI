@@ -1,15 +1,7 @@
 \ test for ASI_SDK.f
 
-: TAB
-	9 emit
-;
-
-\ do-or-die error handler
-: ASI.?abort ( n --)
-	dup ASI.Error type CR
-	IF abort THEN
-	flushKeys
-;
+include "%idir%\..\..\ForthBase\ForthBase.f"
+include "%idir%\ASI_SDK.f"
 	
 \ check DLL and extern status
 ." ASICamera2.dll load address " ASICamera2.dll u. CR
@@ -24,35 +16,35 @@
 		0 do
 			." Camera index " i . CR
 			ASICameraInfo i ASIGetCameraProperty ( buffer index --) ASI.?abort
-			ASICameraInfo ASI_CAMERA_NAME ." ASI_CAMERA_NAME " zcount type CR
-			ASICameraInfo ASI_CAMERA_ID ." ASI_CAMERA_ID " l@ dup u. CR
+			ASICameraInfo ASI_CAMERA_NAME TAB ." ASI_CAMERA_NAME " zcount type CR
+			ASICameraInfo ASI_CAMERA_ID TAB ." ASI_CAMERA_ID " l@ dup u. CR
 				CameraID !
-			ASICameraInfo ASI_MAX_HEIGHT ." ASI_MAX_HEIGHT "  l@ . CR
-			ASICameraInfo ASI_MAX_WIDTH ." ASI_MAX_WIDTH "  l@ . CR
-			ASICameraInfo ASI_IS_COLOR_CAM ." ASI_IS_COLOR_CAM "  l@ . CR
-			ASICameraInfo ASI_BAYER_PATTERN ." ASI_BAYER_PATTERN "  l@ . CR
-			ASICameraInfo ASI_SUPPORTED_BINS ." ASI_SUPPORTED_BINS " CR 
+			ASICameraInfo ASI_MAX_HEIGHT TAB ." ASI_MAX_HEIGHT "  l@ . CR
+			ASICameraInfo ASI_MAX_WIDTH TAB ." ASI_MAX_WIDTH "  l@ . CR
+			ASICameraInfo ASI_IS_COLOR_CAM TAB ." ASI_IS_COLOR_CAM "  l@ . CR
+			ASICameraInfo ASI_BAYER_PATTERN TAB ." ASI_BAYER_PATTERN "  l@ . CR
+			ASICameraInfo ASI_SUPPORTED_BINS TAB ." ASI_SUPPORTED_BINS " CR 
 			dup 64 + swap do 
-				TAB ." bin "	I l@ . CR
+				 TAB TAB ." bin "	I l@ . CR
 			4 +loop
-			ASICameraInfo ASI_MECHANICAL_SHUTTER ." ASI_MECHANICAL_SHUTTER " l@ . CR
-			ASICameraInfo ASI_ST4_PORT ." ASI_ST4_PORT " l@ . CR
-			ASICameraInfo ASI_IS_COOLER_CAM ." ASI_IS_COOLER_CAM " l@ . CR
-			ASICameraInfo ASI_IS_USB3_HOST ." ASI_IS_USB3_HOST " l@ . CR
-			ASICameraInfo ASI_IS_USB3_CAMERA ." ASI_IS_USB3_CAMERA " l@ . CR
-			ASICameraInfo ASI_BIT_DEPTH ." ASI_BIT_DEPTH " l@ . CR
-			ASICameraInfo ASI_IS_TRIGGER_CAM ." ASI_IS_TRIGGER_CAM " l@ . CR
+			ASICameraInfo ASI_MECHANICAL_SHUTTER TAB ." ASI_MECHANICAL_SHUTTER " l@ . CR
+			ASICameraInfo ASI_ST4_PORT TAB ." ASI_ST4_PORT " l@ . CR
+			ASICameraInfo ASI_IS_COOLER_CAM TAB ." ASI_IS_COOLER_CAM " l@ . CR
+			ASICameraInfo ASI_IS_USB3_HOST TAB ." ASI_IS_USB3_HOST " l@ . CR
+			ASICameraInfo ASI_IS_USB3_CAMERA TAB ." ASI_IS_USB3_CAMERA " l@ . CR
+			ASICameraInfo ASI_BIT_DEPTH TAB ." ASI_BIT_DEPTH " l@ . CR
+			ASICameraInfo ASI_IS_TRIGGER_CAM TAB ." ASI_IS_TRIGGER_CAM " l@ . CR
 			CR
 			
 			\ open the camera and check the number of controls
 			CameraID @ ASIOpenCamera ASI.?abort
 			CameraID @ ASINumberOfControls ASIGetNumOfControls ASI.?abort
-			." Number of controls " ASINumberOfControls @ . CR
+			TAB ." Number of controls " ASINumberOfControls @ . CR
 			
 			\ loop over each control and list the control properties and settings
 			ASINumberOfControls @ 0 do
 				." Control index " i . CR
-				CameraID @ I ASIControlCaps ASIGetControlCaps TAB ASI.?abort
+				CameraID @ I ASIControlCaps ASIGetControlCaps ASI.?abort
 				ASIControlCaps ASI_CONTROL_NAME TAB ." ASI_CONTROL_NAME " zcount type CR
 				ASIControlCaps ASI_CONTROL_DESCRIPTION TAB ." ASI_CONTROL_DESCRIPTION " zcount type CR
 				ASIControlCaps ASI_MAX_VALUE TAB ." ASI_MAX_VALUE " l@s . CR			\ note sign extension

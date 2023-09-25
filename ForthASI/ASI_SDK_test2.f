@@ -1,19 +1,13 @@
 \ test for ASI_SDK.f
 \ requires XISF.f
 
+include "%idir%\..\..\ForthBase\ForthBase.f"
+include "%idir%\..\..\ForthBase\FiniteFractions.f"
+include "%idir%\..\..\ForthXISF\XISF.f"
+include "%idir%\ASI_SDK.f"
+
 XISF_BUFFER BUFFER XISFBuffer
 
-: TAB
-	9 emit
-;
-
-\ do-or-die error handler
-: ASI.?abort ( n --)
-	dup ASI.Error type CR
-	IF abort THEN
-	flushKeys
-;
-	
 \ check DLL and extern status
 CR
 ." ASICamera2.dll load address " ASICamera2.dll u. CR
@@ -70,6 +64,7 @@ connectCamera
 prepareBuffer
 1000 ( us) expose
 s" C:\test\ASI_SDK_test2.XISF" download
+s" C:\test\ASI_SDK_test2.XISF" CR type CR
 disconnectCamera
 
 

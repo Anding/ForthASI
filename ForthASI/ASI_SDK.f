@@ -161,4 +161,15 @@ VARIABLE ASIImgType
 VARIABLE StartX
 VARIABLE StartY
 
+\ do-or-die error handler
+: ASI.?abort ( n --)
+	flushKeys	
+	dup 
+	IF 
+		ASI.Error type CR
+		abort 
+	ELSE
+		drop	
+	THEN
+;
 
