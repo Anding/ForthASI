@@ -19,55 +19,86 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
-BEGIN-STRUCTURE CAMERA_INFO
- 4 +FIELD CAMERA_ID		\ ASI Camera ID
-64 +FIELD CAMERA_NAME
- 4 +FIELD MAX_HEIGHT
- 4 +FIELD MAX_WIDTH
- 8 +FIELD SERIAL_NO
-END-STRUCTURE
-
-: cam.define ( CAMERA_INFO <NAME> --)
-\ defining word to recognze a connected camera
-	create
-		CAMERA_INFO allot
-	does>
-	
  
 value 0 cam.ID 
 \ the ASI CameraID of the presently selected camera
 
-: plugged-cameras? ( -- )
-\ list the plugged-in cameras
-\ SerialNo Name ASICameraID MaxWidth MaxHeight
+: scan-cameras ( -- )
+\ scan the plugged-in cameras
+\ create a CONSTANT (out of the name and S/N) for each CameraID
+\ report the cameras and 
 ;
 
-: add-camera ( SerialNo --)
-\ make a camera available for application use and return it's Application Camera Number
+: add-camera ( CameraID --)
+\ make a camera available for application use
 \ 	connect the camera and initialize it with a full frame
-\ 	requires that plugged-cameras? has been run already
-\ 	SerialNo is matched to the last 6 digits only
+\ 	requires that scan-cameras has been run already
 ;
 
-: remove-camera ( SerialNo --)
+: remove-camera ( CameraID --)
 \ disconnect the camera, it becomes unavailable to the application
 ;
 
-: use-camera ( SerialNo --)
-\ set the presently-selected camera
+: select-camera ( CameraID --)
+\ choose the camera to be selected for operations
 ;
 
 : what-camera? ( --)
-\ report the presently-selected camera to the user
-\ CameraNo Name ASICameraID UniqueID MaxWidth MaxHeight
+\ report the current camera to the user
+\ CameraID Name SerialNo MaxWidth MaxHeight
 ;
 
 : camera_gain ( -- gain)
-\ return the gain of the presently-selected camera
+\ return the gain of the camera
 ;
 
 : ->camera_gain ( gain --)
-\ set the gain of the presently-selected cammara
+\ set the gain of the cammara
+;
+
+: camera_exposure ( -- exposure_in_uS)
+\ return the exposure in uS of the camera
+\ 	does not initiate an image
+;
+
+: ->camera_exposure ( exposure_in_uS --)
+\ set the exposure in uS of the camera
+;
+
+: camera_temp ( -- temperature_in_C)
+\ return the temperature of the camera
+;
+
+: ->camera_temp_target ( temperature_in_C --)
+\ set the temperature of the camera
+;
+
+: camera_offset ( -- offset_in_ADU)
+\ return the offset of the camera
+;
+
+: ->camera_offset ( offset_in_ADU --)
+\ set the offset of the camera
+;
+
+: camera_binning ( -- x)
+\ return the camera binning
+;
+
+: ->camera_binning (x --)
+\ set the camera binning
+;
+
+: ->camera_restrict ( n -- width height)
+\ restrict the camera to 1/n of full frame size, centred
+\ return the width and height of the frame size set
+
+: start-cooling ( --)
+\ start the camera cooler
+;
+
+: stop-cooling ( --)
+\ stop the camera cooler
 ;
 
 : uSeconds ( uS -- uS)
@@ -75,7 +106,7 @@ value 0 cam.ID
 \ for documentation only
 ;
 
-: mSeconds ( mS -- us)
+: mSeconds ( mS -- uS)
 \ convert uS to mS
 	1000 *
 ;
@@ -84,14 +115,3 @@ value 0 cam.ID
 \ convert S to uS
 	1000000 *
 ;
-
-: exposure ( -- exposure_in_uS )
-\ return the exposure in uS of the presently-selected camera
-\ 	does not initiate an image
-;
-
-: ->exposure ( exposure_in_uS --)
-\ set the exposure in uS of the presently-selected camera
-;
-
-
