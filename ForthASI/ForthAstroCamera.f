@@ -20,13 +20,34 @@
 \ 	actions to the presently-selected-camera
 
  
-value 0 cam.ID 
+0 value camera.ID 
 \ the ASI CameraID of the presently selected camera
 
 : scan-cameras ( -- )
 \ scan the plugged-in cameras
 \ create a CONSTANT (out of the name and S/N) for each CameraID
 \ report the cameras and 
+	base @ >R hex									\ report the s/n in hex
+	ASIGetNumOfConnectedCameras ( -- n)
+	?dup
+	IF
+		\ loop over each connected camera
+		CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Name"
+		0 do
+			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
+			ASICameraInfo ASI_CAMERA_ID l@				( ID)
+			cr dup .
+			ASICameraInfo ASI_CAMERA_NAME zcount tab type			
+			dup ASIOpenCamera ASI.?ABORT
+			dup ASISN ASIGetSerialNumber ASI.?ABORT 	( ID)
+			dup ASICloseCamera ASI.?abort					( ID)
+			ASISN l@ tab u. 									\ last 8 hex digits only				
+			ASI.make-handle									( ID c-addr u)
+			2dup tab type CR									( ID c-addr u)
+			($constant)											( --)
+		loop
+	THEN
+	R> base !
 ;
 
 : add-camera ( CameraID --)
@@ -85,13 +106,14 @@ value 0 cam.ID
 \ return the camera binning
 ;
 
-: ->camera_binning (x --)
+: ->camera_binning ( x --)
 \ set the camera binning
 ;
 
 : ->camera_restrict ( n -- width height)
 \ restrict the camera to 1/n of full frame size, centred
 \ return the width and height of the frame size set
+;
 
 : start-cooling ( --)
 \ start the camera cooler
@@ -111,7 +133,7 @@ value 0 cam.ID
 	1000 *
 ;
 
-: Seconds( S -- uS)
+: Seconds ( S -- uS)
 \ convert S to uS
 	1000000 *
 ;
