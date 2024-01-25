@@ -32,11 +32,11 @@
 	?dup
 	IF
 		\ loop over each connected camera
-		CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Name"
+		CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Handle" CR
 		0 do
 			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
 			ASICameraInfo ASI_CAMERA_ID l@				( ID)
-			cr dup .
+			dup .
 			ASICameraInfo ASI_CAMERA_NAME zcount tab type			
 			dup ASIOpenCamera ASI.?ABORT
 			dup ASISN ASIGetSerialNumber ASI.?ABORT 	( ID)
