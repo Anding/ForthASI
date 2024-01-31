@@ -53,28 +53,43 @@
 : add-camera ( CameraID --)
 \ make a camera available for application use
 \ 	connect the camera and initialize it with a full frame
-\ 	requires that scan-cameras has been run already
+	dup ASIOpenCamera ASI.?abort
+	dup ASIInitCamera ASI.?abort
+	dup ASIGetCameraProperty ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	dup ( ID) ASI_MAX_WIDTH l@ ASI_MAX_HEIGHT l@ 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
 ;
 
 : remove-camera ( CameraID --)
 \ disconnect the camera, it becomes unavailable to the application
+	ASICloseCamera ASI.?abort
 ;
 
 : select-camera ( CameraID --)
 \ choose the camera to be selected for operations
+	-> camera.ID
 ;
 
 : what-camera? ( --)
 \ report the current camera to the user
 \ CameraID Name SerialNo MaxWidth MaxHeight
+	CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Max_Width" tab tab ." Max_Height" CR	
+	camera.ID .	
+	camera.ID ASIGetCameraProperty ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
+	ASICameraInfo ASI_CAMERA_NAME zcount tab type
+	ASISN l@ tab u.
+	ASICameraInfo ASI_MAX_WIDTH l@ tab .
+	ASICameraInfo ASI_MAX_HEIGHT l@ tab . CR
 ;
 
 : camera_gain ( -- gain)
 \ return the gain of the camera
+	camera.ID ASI_GAIN ASI.get-control
 ;
 
 : ->camera_gain ( gain --)
-\ set the gain of the cammara
+\ set the gain of the camera
+	camera.ID ASI_GAIN -rot ASI.set-control
 ;
 
 : camera_exposure ( -- exposure_in_uS)
