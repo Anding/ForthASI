@@ -1,0 +1,396 @@
+Camera index 0 
+	ASI_CAMERA_NAME ZWO ASI178MM
+	ASI_CAMERA_ID 0 
+	ASI_MAX_HEIGHT 2080 
+	ASI_MAX_WIDTH 3096 
+	ASI_IS_COLOR_CAM 0 
+	ASI_BAYER_PATTERN 0 
+	ASI_SUPPORTED_BINS 
+		bin 1 
+		bin 2 
+		bin 3 
+		bin 4 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+	ASI_MECHANICAL_SHUTTER 0 
+	ASI_ST4_PORT 1 
+	ASI_IS_COOLER_CAM 0 
+	ASI_IS_USB3_HOST 1 
+	ASI_IS_USB3_CAMERA 1 
+	ASI_BIT_DEPTH 14 
+	ASI_IS_TRIGGER_CAM 0 
+
+	Number of controls 11 
+Control index 0 
+	ASI_CONTROL_NAME Gain
+	ASI_CONTROL_DESCRIPTION Gain
+	ASI_MAX_VALUE 510 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 210 
+	ASI_IS_AUTO_SUPPORTED 1 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 0 
+			Control Value 210 
+		Control Auto 0 
+
+Control index 1 
+	ASI_CONTROL_NAME Exposure
+	ASI_CONTROL_DESCRIPTION Exposure Time(us)
+	ASI_MAX_VALUE 2000000000 
+	ASI_MIN_VALUE 32 
+	ASI_DEFAULT_VALUE 10000 
+	ASI_IS_AUTO_SUPPORTED 1 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 1 
+			Control Value 10000 
+		Control Auto 0 
+
+Control index 2 
+	ASI_CONTROL_NAME Offset
+	ASI_CONTROL_DESCRIPTION offset
+	ASI_MAX_VALUE 600 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 10 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 5 
+			Control Value 10 
+		Control Auto 0 
+
+Control index 3 
+	ASI_CONTROL_NAME BandWidth
+	ASI_CONTROL_DESCRIPTION The total data transfer rate percentage
+	ASI_MAX_VALUE 100 
+	ASI_MIN_VALUE 40 
+	ASI_DEFAULT_VALUE 50 
+	ASI_IS_AUTO_SUPPORTED 1 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 6 
+			Control Value 60 
+		Control Auto 1 
+
+Control index 4 
+	ASI_CONTROL_NAME Flip
+	ASI_CONTROL_DESCRIPTION Flip: 0->None 1->Horiz 2->Vert 3->Both
+	ASI_MAX_VALUE 3 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 9 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 5 
+	ASI_CONTROL_NAME AutoExpMaxGain
+	ASI_CONTROL_DESCRIPTION Auto exposure maximum gain value
+	ASI_MAX_VALUE 510 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 255 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 10 
+			Control Value 255 
+		Control Auto 0 
+
+Control index 6 
+	ASI_CONTROL_NAME AutoExpMaxExpMS
+	ASI_CONTROL_DESCRIPTION Auto exposure maximum exposure value(unit ms)
+	ASI_MAX_VALUE 60000 
+	ASI_MIN_VALUE 1 
+	ASI_DEFAULT_VALUE 100 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 11 
+			Control Value 30000 
+		Control Auto 0 
+
+Control index 7 
+	ASI_CONTROL_NAME AutoExpTargetBrightness
+	ASI_CONTROL_DESCRIPTION Auto exposure target brightness value
+	ASI_MAX_VALUE 160 
+	ASI_MIN_VALUE 50 
+	ASI_DEFAULT_VALUE 100 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 12 
+			Control Value 100 
+		Control Auto 0 
+
+Control index 8 
+	ASI_CONTROL_NAME HardwareBin
+	ASI_CONTROL_DESCRIPTION Is hardware bin2:0->No 1->Yes
+	ASI_MAX_VALUE 1 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 13 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 9 
+	ASI_CONTROL_NAME HighSpeedMode
+	ASI_CONTROL_DESCRIPTION Is high speed mode:0->No 1->Yes
+	ASI_MAX_VALUE 1 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 14 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 10 
+	ASI_CONTROL_NAME Temperature
+	ASI_CONTROL_DESCRIPTION Sensor temperature(degrees Celsius)
+	ASI_MAX_VALUE 1000 
+	ASI_MIN_VALUE -500 
+	ASI_DEFAULT_VALUE 20 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 0 
+	ASI_CONTROL_TYPE 8 
+			Control Value 266 
+		Control Auto 0 
+
+ROI Format
+	Width 3096 
+	Height 2080 
+	Bin 1 
+	ASIImgType 3 
+
+Serial Number 
+	2543286507346731 
+
+
+Camera index 1 
+	ASI_CAMERA_NAME ZWO ASI2600MM Pro
+	ASI_CAMERA_ID 1 
+	ASI_MAX_HEIGHT 4176 
+	ASI_MAX_WIDTH 6248 
+	ASI_IS_COLOR_CAM 0 
+	ASI_BAYER_PATTERN 0 
+	ASI_SUPPORTED_BINS 
+		bin 1 
+		bin 2 
+		bin 3 
+		bin 4 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+		bin 0 
+	ASI_MECHANICAL_SHUTTER 0 
+	ASI_ST4_PORT 0 
+	ASI_IS_COOLER_CAM 1 
+	ASI_IS_USB3_HOST 1 
+	ASI_IS_USB3_CAMERA 1 
+	ASI_BIT_DEPTH 16 
+	ASI_IS_TRIGGER_CAM 0 
+
+	Number of controls 15 
+Control index 0 
+	ASI_CONTROL_NAME Gain
+	ASI_CONTROL_DESCRIPTION Gain
+	ASI_MAX_VALUE 700 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 200 
+	ASI_IS_AUTO_SUPPORTED 1 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 0 
+			Control Value 50 
+		Control Auto 0 
+
+Control index 1 
+	ASI_CONTROL_NAME Exposure
+	ASI_CONTROL_DESCRIPTION Exposure Time(us)
+	ASI_MAX_VALUE 2000000000 
+	ASI_MIN_VALUE 32 
+	ASI_DEFAULT_VALUE 10000 
+	ASI_IS_AUTO_SUPPORTED 1 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 1 
+			Control Value 32 
+		Control Auto 0 
+
+Control index 2 
+	ASI_CONTROL_NAME Offset
+	ASI_CONTROL_DESCRIPTION offset
+	ASI_MAX_VALUE 240 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 1 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 5 
+			Control Value 50 
+		Control Auto 0 
+
+Control index 3 
+	ASI_CONTROL_NAME BandWidth
+	ASI_CONTROL_DESCRIPTION The total data transfer rate percentage
+	ASI_MAX_VALUE 100 
+	ASI_MIN_VALUE 40 
+	ASI_DEFAULT_VALUE 50 
+	ASI_IS_AUTO_SUPPORTED 1 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 6 
+			Control Value 40 
+		Control Auto 0 
+
+Control index 4 
+	ASI_CONTROL_NAME Flip
+	ASI_CONTROL_DESCRIPTION Flip: 0->None 1->Horiz 2->Vert 3->Both
+	ASI_MAX_VALUE 3 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 9 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 5 
+	ASI_CONTROL_NAME AutoExpMaxGain
+	ASI_CONTROL_DESCRIPTION Auto exposure maximum gain value
+	ASI_MAX_VALUE 700 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 350 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 10 
+			Control Value 337 
+		Control Auto 0 
+
+Control index 6 
+	ASI_CONTROL_NAME AutoExpMaxExpMS
+	ASI_CONTROL_DESCRIPTION Auto exposure maximum exposure value(unit ms)
+	ASI_MAX_VALUE 60000 
+	ASI_MIN_VALUE 1 
+	ASI_DEFAULT_VALUE 100 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 11 
+			Control Value 30000 
+		Control Auto 0 
+
+Control index 7 
+	ASI_CONTROL_NAME AutoExpTargetBrightness
+	ASI_CONTROL_DESCRIPTION Auto exposure target brightness value
+	ASI_MAX_VALUE 160 
+	ASI_MIN_VALUE 50 
+	ASI_DEFAULT_VALUE 100 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 12 
+			Control Value 100 
+		Control Auto 0 
+
+Control index 8 
+	ASI_CONTROL_NAME HardwareBin
+	ASI_CONTROL_DESCRIPTION Is hardware bin2:0->No 1->Yes
+	ASI_MAX_VALUE 1 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 13 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 9 
+	ASI_CONTROL_NAME HighSpeedMode
+	ASI_CONTROL_DESCRIPTION Is high speed mode:0->No 1->Yes
+	ASI_MAX_VALUE 1 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 14 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 10 
+	ASI_CONTROL_NAME Temperature
+	ASI_CONTROL_DESCRIPTION Sensor temperature(degrees Celsius)
+	ASI_MAX_VALUE 1000 
+	ASI_MIN_VALUE -500 
+	ASI_DEFAULT_VALUE 20 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 0 
+	ASI_CONTROL_TYPE 8 
+			Control Value 229 
+		Control Auto 0 
+
+Control index 11 
+	ASI_CONTROL_NAME CoolPowerPerc
+	ASI_CONTROL_DESCRIPTION Cooler power percent
+	ASI_MAX_VALUE 100 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 0 
+	ASI_CONTROL_TYPE 15 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 12 
+	ASI_CONTROL_NAME TargetTemp
+	ASI_CONTROL_DESCRIPTION Target temperature(cool camera only)
+	ASI_MAX_VALUE 30 
+	ASI_MIN_VALUE -40 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 16 
+			Control Value 4294967286 
+		Control Auto 0 
+
+Control index 13 
+	ASI_CONTROL_NAME CoolerOn
+	ASI_CONTROL_DESCRIPTION turn on/off cooler(cool camera only)
+	ASI_MAX_VALUE 1 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 17 
+			Control Value 0 
+		Control Auto 0 
+
+Control index 14 
+	ASI_CONTROL_NAME AntiDewHeater
+	ASI_CONTROL_DESCRIPTION turn on/off anti dew heater(cool camera only)
+	ASI_MAX_VALUE 1 
+	ASI_MIN_VALUE 0 
+	ASI_DEFAULT_VALUE 0 
+	ASI_IS_AUTO_SUPPORTED 0 
+	ASI_IS_WRITABLE 1 
+	ASI_CONTROL_TYPE 21 
+			Control Value 0 
+		Control Auto 0 
+
+ROI Format
+	Width 6248 
+	Height 4176 
+	Bin 1 
+	ASIImgType 0 
+
+Serial Number 
+	2534511897222915

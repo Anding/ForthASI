@@ -34,10 +34,10 @@
 
 : ASI.get-control ( CameraID ASI_CONTROL_TYPE -- value)
 	ControlValue ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue ASI.?Abort
-	ControlValue l@
+	ControlValue @
 ;
 
 : ASI.set-control ( CameraID ASI_CONTROL_TYPE value --)
-	ControlValue l!
+	ControlValue !
 	ControlValue ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASISetControlValue ASI.?Abort
 ;

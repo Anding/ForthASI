@@ -55,8 +55,8 @@
 \ 	connect the camera and initialize it with a full frame
 	dup ASIOpenCamera ASI.?abort
 	dup ASIInitCamera ASI.?abort
-	dup ASIGetCameraProperty ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	dup ( ID) ASI_MAX_WIDTH l@ ASI_MAX_HEIGHT l@ 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
+	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	( ID) ASICameraInfo ASI_MAX_WIDTH l@ ASICameraInfo ASI_MAX_HEIGHT l@ 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
 ;
 
 : remove-camera ( CameraID --)
@@ -72,14 +72,16 @@
 : what-camera? ( --)
 \ report the current camera to the user
 \ CameraID Name SerialNo MaxWidth MaxHeight
-	CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Max_Width" tab tab ." Max_Height" CR	
+	CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height" CR	
 	camera.ID .	
-	camera.ID ASIGetCameraProperty ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
 	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 	ASICameraInfo ASI_CAMERA_NAME zcount tab type
+	base @ hex									\ report the s/n in hex
 	ASISN l@ tab u.
+	base !
 	ASICameraInfo ASI_MAX_WIDTH l@ tab .
-	ASICameraInfo ASI_MAX_HEIGHT l@ tab . CR
+	ASICameraInfo ASI_MAX_HEIGHT l@ tab tab . CR
 ;
 
 : camera_gain ( -- gain)
@@ -89,7 +91,8 @@
 
 : ->camera_gain ( gain --)
 \ set the gain of the camera
-	camera.ID ASI_GAIN -rot ASI.set-control
+	camera.ID ASI_GAIN rot 
+	( CameraID ASI_CONTROL_TYPE value) ASI.set-control
 ;
 
 : camera_exposure ( -- exposure_in_uS)
