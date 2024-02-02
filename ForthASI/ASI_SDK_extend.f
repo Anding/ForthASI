@@ -32,12 +32,33 @@
 	R> base !
 ;
 
-: ASI.get-control ( CameraID ASI_CONTROL_TYPE -- value)
-	ControlValue ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue ASI.?Abort
-	ControlValue @
+: ASI.get-control ( CameraID ASI_CONTROL_TYPE -- value) {  | ControlV ControlA -- } \ VFX unassigned locals
+	ADDR ControlV ADDR ControlA ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue ASI.?Abort
+	ControlV
 ;
 
 : ASI.set-control ( CameraID ASI_CONTROL_TYPE value --)
-	ControlValue !
-	ControlValue ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASISetControlValue ASI.?Abort
+	0 ( ID ASI_CONTROL_TYPE ControlValue ControlAuto) ASISetControlValue ASI.?Abort
 ;
+ 
+0 value camera.ID 
+\ the ASI CameraID of the presently selected camera
+
+: ASI.define-get-control
+	CREATE ( ASI_CONTROL_TYPE)
+		,
+	DOES>
+	@ camera.ID swap
+	ASI.get-control
+;
+
+: ASI.define-set-control
+	CREATE ( ASI_CONTROL_TYPE) 
+		,
+	DOES> ( value &PFA)
+	@ camera.ID	-rot swap ( CameraID ASI_CONTROL_TYPE value)
+	ASI.set-control
+;
+
+
+		

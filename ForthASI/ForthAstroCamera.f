@@ -19,9 +19,7 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
- 
-0 value camera.ID 
-\ the ASI CameraID of the presently selected camera
+
 
 : scan-cameras ( -- )
 \ scan the plugged-in cameras
@@ -64,7 +62,7 @@
 	ASICloseCamera ASI.?abort
 ;
 
-: select-camera ( CameraID --)
+: use-camera ( CameraID --)
 \ choose the camera to be selected for operations
 	-> camera.ID
 ;
@@ -84,41 +82,14 @@
 	ASICameraInfo ASI_MAX_HEIGHT l@ tab tab . CR
 ;
 
-: camera_gain ( -- gain)
-\ return the gain of the camera
-	camera.ID ASI_GAIN ASI.get-control
-;
-
-: ->camera_gain ( gain --)
-\ set the gain of the camera
-	camera.ID ASI_GAIN rot 
-	( CameraID ASI_CONTROL_TYPE value) ASI.set-control
-;
-
-: camera_exposure ( -- exposure_in_uS)
-\ return the exposure in uS of the camera
-\ 	does not initiate an image
-;
-
-: ->camera_exposure ( exposure_in_uS --)
-\ set the exposure in uS of the camera
-;
-
-: camera_temp ( -- temperature_in_C)
-\ return the temperature of the camera
-;
-
-: ->camera_temp_target ( temperature_in_C --)
-\ set the temperature of the camera
-;
-
-: camera_offset ( -- offset_in_ADU)
-\ return the offset of the camera
-;
-
-: ->camera_offset ( offset_in_ADU --)
-\ set the offset of the camera
-;
+ASI_GAIN 					ASI.define-get-control camera_gain
+ASI_GAIN 					ASI.define-set-control ->camera_gain
+ASI_EXPOSURE				ASI.define-get-control camera_exposure
+ASI_EXPOSURE				ASI.define-set-control	->camera_exposure
+ASI_OFFSET					ASI.define-get-control  camera_offset
+ASI_OFFSET					ASI.define-set-control	->camera_offset
+ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power 
+ASI_COOLER_POWER_PERC	ASI.define-set-control	->cooler_power  \ INVALID_CONTROL_TYPE   ... read only?
 
 : camera_binning ( -- x)
 \ return the camera binning
