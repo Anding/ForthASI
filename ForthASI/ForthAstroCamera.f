@@ -19,8 +19,6 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
-
-
 : scan-cameras ( -- )
 \ scan the plugged-in cameras
 \ create a CONSTANT (out of the name and S/N) for each CameraID
@@ -89,40 +87,99 @@ ASI_EXPOSURE				ASI.define-set-control	->camera_exposure
 ASI_OFFSET					ASI.define-get-control  camera_offset
 ASI_OFFSET					ASI.define-set-control	->camera_offset
 ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power 
-ASI_COOLER_POWER_PERC	ASI.define-set-control	->cooler_power  \ INVALID_CONTROL_TYPE   ... read only?
+ASI_BANDWIDTH				ASI.define-get-control	camera_bandwidth
+ASI_BANDWIDTH				ASI.define-set-control	->camera_bandwidth
+ASI_TEMPERATURE			ASI.define-get-control	|camera_temperature|
+ASI_TARGETTEMP				ASI.define-get-control	target_temperature
+ASI_TARGETTEMP				ASI.define-set-control	->target_temperature
+ASI_COOLERON				ASI.define-set-control	camera_cooler
+ASI_COOLERON				ASI.define-set-control	->camera_cooler
+ASI_ANSIDEWHEATER			ASI.define-set-control	camera_dew_heater
+ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
 
-: camera_binning ( -- x)
+: camera_temperature
+\ return the camera temperature in integer Celcius
+	|camera_temperature| ( temp*10) 5 + 10 /
+;
+
+: cooler-on
+	1 ->camera_cooler
+;
+
+: cooler-off
+	0 ->camera_cooler
+;
+
+: dew_heater-on
+	1 ->camera_dew_heater
+;
+
+: dew_heater-off
+	0 ->camera_dew_heater
+;
+
+: camera_ROI ( -- width height bin) { | ROIWidth ROIHeight ROIBin ASIImgType }  \ VFX locals for pass-by-reference
+	camera.ID @ ADDR ROIWidth ADDR ROIHeight ADDR ROIBin ADDR ASIImgType ASIGetROIFormat ASI.?ABORT
+	ROIWidth ROIHeight ROIBin
+;
+
+: ->camera_ROI ( width height bin)
+ 	camera.ID ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) 
+	ASISetROIFormat ASI.?abort
+;
+
+: camera_binning ( -- bin)
 \ return the camera binning
+	camera_ROI nip nip
 ;
 
-: ->camera_binning ( x --)
+: ->camera_binning ( bin --)
 \ set the camera binning
+	camera_ROI drop rot ->camera_ROI
 ;
 
-: ->camera_restrict ( n -- width height)
-\ restrict the camera to 1/n of full frame size, centred
-\ return the width and height of the frame size set
+: crop-camera ( f --)
+\ crop the camera frame to 1/f of maximum
+	camera_binning >R	>R			( R: bin f)
+	camera_pixels R@ / swap R> / swap \ scale down with f
+	camera_pixels R@ / swap R@ / swap \ scale down with bin	
+	R> ->camera_ROI
 ;
 
-: start-cooling ( --)
-\ start the camera cooler
-;
-
-: stop-cooling ( --)
-\ stop the camera cooler
-;
-
-: uSeconds ( uS -- uS)
+: uSecs ( uS -- uS)
 \ convert uS to uS
-\ for documentation only
+\ for syntax consistency only
 ;
 
-: mSeconds ( mS -- uS)
+: mSecs ( mS -- uS)
 \ convert uS to mS
 	1000 *
 ;
 
-: Seconds ( S -- uS)
+: Secs ( S -- uS)
 \ convert S to uS
 	1000000 *
 ;
+
+: start-exposure ( --)
+\ initiate an exposure
+	camera.ID 0 (ID isdark) ASIStartExposure ASI.?abort
+	CR ." Exposing..." CR 
+;
+
+: stop-exposure ( --)
+\ stop an exposure
+	camera.ID ASIStopExposure ASI.?abort
+;
+
+: exposure_status ( -- ASI_EXPOSURE_STATUS) { exposureStatus}
+	camera.ID ADDR exposureStatus ASIGetExpStatus ASI.?abort
+	exposureStatus
+;
+
+: download-image ( addr u --)
+	camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
+;
+
+
+	

@@ -7,6 +7,17 @@ include "%idir%\ASI_SDK.f"
 ." ASICamera2.dll load address " ASICamera2.dll u. CR
 .BadExterns CR
 
+VARIABLE CameraID
+VARIABLE ASINumberOfControls
+VARIABLE ControlValue
+VARIABLE ControlAuto
+VARIABLE ROIWidth
+VARIABLE ROIHeight
+VARIABLE ROIBin
+VARIABLE ASIImgType
+VARIABLE StartX
+VARIABLE StartY
+
 \ get and print all the properties of all the connected cameras
 : ASI.ReviewCameras
 	ASIGetNumOfConnectedCameras ( -- n)
@@ -63,8 +74,6 @@ include "%idir%\ASI_SDK.f"
 			
 			\ get the image region and binning
 			." ROI Format" CR
-			CameraID @ ROIWidth ROIHeight ROIBin ASIImgType ( CameraID &Width &Height &Bin &ImageType) 
-			ASIGetROIFormat  ASI.?ABORT
 			TAB ." Width " ROIWidth l@ . CR
 			TAB ." Height " ROIHeight l@ . CR
 			TAB ." Bin " ROIBin l@ . CR

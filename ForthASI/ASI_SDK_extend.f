@@ -6,6 +6,7 @@
 
 \ Operational notes
 \ 	variables over values
+
 : despace ( c-addr u --)
 \ convert spaces to underscore characters
 	over + swap do
@@ -13,7 +14,7 @@
 	loop
 ;
 
-: ASI.camera_model ( c-addr u -- c-addr u)
+: ASI.get-model ( c-addr u -- c-addr u)
 \ extract the model of an ASI camera from the ASI_CAMERA_NAME field
 \ assume that the name is formatted "ZWO ASI[MODEL]"
 	4 - swap 4 + swap
@@ -27,14 +28,14 @@
 	ASISN l@ 0 
 	<# # # # #  	\ last 4 digits only 
 	'_' HOLD			\ separator
-	ASICameraInfo ASI_CAMERA_NAME zcount ASI.camera_model HOLDS
+	ASICameraInfo ASI_CAMERA_NAME zcount ASI.get-model HOLDS
 	#> 
 	R> base !
 ;
 
-: ASI.get-control ( CameraID ASI_CONTROL_TYPE -- value) {  | ControlV ControlA -- } \ VFX unassigned locals
-	ADDR ControlV ADDR ControlA ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue ASI.?Abort
-	ControlV
+: ASI.get-control ( CameraID ASI_CONTROL_TYPE -- value) {  | ControlValue ControlAuto -- } \ VFX unassigned locals
+	ADDR ControlValue ADDR ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue ASI.?Abort
+	ControlValue
 ;
 
 : ASI.set-control ( CameraID ASI_CONTROL_TYPE value --)
@@ -45,20 +46,23 @@
 \ the ASI CameraID of the presently selected camera
 
 : ASI.define-get-control
-	CREATE ( ASI_CONTROL_TYPE)
+\ defining word for wrapping ASI.get-control
+	CREATE ( ASI_CONTROL_TYPE <NAME> --)
 		,
-	DOES>
-	@ camera.ID swap
+	DOES> ( -- value)
+	( PFA) @ camera.ID swap
 	ASI.get-control
 ;
 
 : ASI.define-set-control
-	CREATE ( ASI_CONTROL_TYPE) 
+\ defining word for wrapping ASI.set-control
+	CREATE ( ASI_CONTROL_TYPE <NAME> --) 
 		,
-	DOES> ( value &PFA)
-	@ camera.ID	-rot swap ( CameraID ASI_CONTROL_TYPE value)
+	DOES> ( value --)
+	( value PFA) @ camera.ID	-rot swap ( CameraID ASI_CONTROL_TYPE value)
 	ASI.set-control
 ;
+
 
 
 		

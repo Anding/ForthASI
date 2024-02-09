@@ -13,6 +13,17 @@ CR
 ." ASICamera2.dll load address " ASICamera2.dll u. CR
 .BadExterns CR
 
+VARIABLE CameraID
+VARIABLE ASINumberOfControls
+VARIABLE ControlValue
+VARIABLE ControlAuto
+VARIABLE ROIWidth
+VARIABLE ROIHeight
+VARIABLE ROIBin
+VARIABLE ASIImgType
+VARIABLE StartX
+VARIABLE StartY
+
 : connectCamera ( -- )
 \ open an initialize a camera
 	CameraID @ ASIOpenCamera ASI.?abort

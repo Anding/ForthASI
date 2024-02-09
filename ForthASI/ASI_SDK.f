@@ -145,21 +145,11 @@ BEGIN-ENUM ( ASI_CAMERA_MODE )
 	+ENUM ASI_MODE_NORMAL
 END-ENUM
 
-\ pass by reference to ASI library functions ( mainly for gets )
+\ pass by reference to ASI library functions
 ASI_CAMERA_INFO	BUFFER: ASICameraInfo
 ASI_CONTROL_CAPS	BUFFER: ASIControlCaps
 ASI_ID				BUFFER: ASIID
 ASI_ID				BUFFER: ASISN
-VARIABLE CameraID
-VARIABLE ASINumberOfControls
-VARIABLE ControlValue
-VARIABLE ControlAuto
-VARIABLE ROIWidth
-VARIABLE ROIHeight
-VARIABLE ROIBin
-VARIABLE ASIImgType
-VARIABLE StartX
-VARIABLE StartY
 
 \ do-or-die error handler
 : ASI.?abort ( n --)
