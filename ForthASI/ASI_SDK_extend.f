@@ -25,7 +25,7 @@
 \ prepare a handle for the camera based on name and serial number
 \ assumes ASIGetCameraProperty and ASIGetSerialNumber have been called
 	base @ >R hex	\ s/n in hexadecimal
-	ASISN l@ 0 
+	ASISN @ 0 
 	<# # # # #  	\ last 4 digits only 
 	'_' HOLD			\ separator
 	ASICameraInfo ASI_CAMERA_NAME zcount ASI.get-model HOLDS

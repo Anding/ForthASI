@@ -31,13 +31,13 @@
 		CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Handle" CR
 		0 do
 			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
-			ASICameraInfo ASI_CAMERA_ID l@				( ID)
+			ASICameraInfo ASI_CAMERA_ID @				( ID)
 			dup .
 			ASICameraInfo ASI_CAMERA_NAME zcount tab type			
 			dup ASIOpenCamera ASI.?ABORT
 			dup ASISN ASIGetSerialNumber ASI.?ABORT 	( ID)
 			dup ASICloseCamera ASI.?abort					( ID)
-			ASISN l@ tab u. 									\ last 8 hex digits only				
+			ASISN @ tab u. 									\ last 8 hex digits only				
 			ASI.make-handle									( ID c-addr u)
 			2dup tab type CR									( ID c-addr u)
 			($constant)											( --)
@@ -52,7 +52,7 @@
 	dup ASIOpenCamera ASI.?abort
 	dup ASIInitCamera ASI.?abort
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	( ID) ASICameraInfo ASI_MAX_WIDTH l@ ASICameraInfo ASI_MAX_HEIGHT l@ 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
+	( ID) ASICameraInfo ASI_MAX_WIDTH @ ASICameraInfo ASI_MAX_HEIGHT @ 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
 ;
 
 : remove-camera ( CameraID --)
@@ -74,10 +74,10 @@
 	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 	ASICameraInfo ASI_CAMERA_NAME zcount tab type
 	base @ hex									\ report the s/n in hex
-	ASISN l@ tab u.
+	ASISN @ tab u.
 	base !
-	ASICameraInfo ASI_MAX_WIDTH l@ tab .
-	ASICameraInfo ASI_MAX_HEIGHT l@ tab tab . CR
+	ASICameraInfo ASI_MAX_WIDTH @ tab .
+	ASICameraInfo ASI_MAX_HEIGHT @ tab tab . CR
 ;
 
 ASI_GAIN 					ASI.define-get-control camera_gain
@@ -87,15 +87,20 @@ ASI_EXPOSURE				ASI.define-set-control	->camera_exposure
 ASI_OFFSET					ASI.define-get-control  camera_offset
 ASI_OFFSET					ASI.define-set-control	->camera_offset
 ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power 
-ASI_BANDWIDTH				ASI.define-get-control	camera_bandwidth
-ASI_BANDWIDTH				ASI.define-set-control	->camera_bandwidth
+ASI_BANDWIDTHOVERLOAD	ASI.define-get-control	camera_bandwidth
+ASI_BANDWIDTHOVERLOAD	ASI.define-set-control	->camera_bandwidth
 ASI_TEMPERATURE			ASI.define-get-control	|camera_temperature|
-ASI_TARGETTEMP				ASI.define-get-control	target_temperature
-ASI_TARGETTEMP				ASI.define-set-control	->target_temperature
-ASI_COOLERON				ASI.define-set-control	camera_cooler
-ASI_COOLERON				ASI.define-set-control	->camera_cooler
-ASI_ANSIDEWHEATER			ASI.define-set-control	camera_dew_heater
-ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
+ASI_TARGET_TEMP			ASI.define-get-control	target_temperature
+ASI_TARGET_TEMP			ASI.define-set-control	->target_temperature
+ASI_COOLER_ON				ASI.define-get-control	camera_cooler
+ASI_COOLER_ON				ASI.define-set-control	->camera_cooler
+ASI_ANTI_DEW_HEATER		ASI.define-get-control	camera_dew_heater
+ASI_ANTI_DEW_HEATER		ASI.define-set-control	->camera_dew_heater
+ASI_HUMIDITY				ASI.define-get-control	camera_humidity
+ASI_ENABLE_DDR				ASI.define-get-control	camera_DDR
+ASI_ENABLE_DDR				ASI.define-set-control	->camera_DDR
+ASI_FAN_ON					ASI.define-get-control	camera_fan
+ASI_FAN_ON					ASI.define-set-control	->camera_fan
 
 : camera_temperature
 \ return the camera temperature in integer Celcius
@@ -118,6 +123,14 @@ ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
 	0 ->camera_dew_heater
 ;
 
+: fan-on
+	1 ->camera_fan
+;
+
+: fan-off
+	0 ->camera_fan
+;
+
 : camera_ROI ( -- width height bin) { | ROIWidth ROIHeight ROIBin ASIImgType }  \ VFX locals for pass-by-reference
 	camera.ID ADDR ROIWidth ADDR ROIHeight ADDR ROIBin ADDR ASIImgType ASIGetROIFormat ASI.?ABORT
 	ROIWidth ROIHeight ROIBin
@@ -138,14 +151,6 @@ ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
 	camera_ROI drop rot ->camera_ROI
 ;
 
-: crop-camera ( f --)
-\ crop the camera frame to 1/f of maximum
-	camera_binning >R	>R			( R: bin f)
-	camera_pixels R@ / swap R> / swap \ scale down with f
-	camera_pixels R@ / swap R@ / swap \ scale down with bin	
-	R> ->camera_ROI
-;
-
 : uSecs ( uS -- uS)
 \ convert uS to uS
 \ for syntax consistency only
@@ -163,7 +168,7 @@ ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
 
 : start-exposure ( --)
 \ initiate an exposure
-	camera.ID 0 (ID isdark) ASIStartExposure ASI.?abort
+	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
 	CR ." Exposing..." CR 
 ;
 
@@ -172,7 +177,7 @@ ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
 	camera.ID ASIStopExposure ASI.?abort
 ;
 
-: exposure_status ( -- ASI_EXPOSURE_STATUS) { exposureStatus}
+: exposure_status ( -- ASI_EXPOSURE_STATUS) { | exposureStatus }
 	camera.ID ADDR exposureStatus ASIGetExpStatus ASI.?abort
 	exposureStatus
 ;
@@ -180,6 +185,3 @@ ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
 : download-image ( addr u --)
 	camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
 ;
-
-
-	
