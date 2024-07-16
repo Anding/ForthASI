@@ -119,7 +119,7 @@ ASI_ANSIDEWHEATER			ASI.define-set-control	->camera_dew_heater
 ;
 
 : camera_ROI ( -- width height bin) { | ROIWidth ROIHeight ROIBin ASIImgType }  \ VFX locals for pass-by-reference
-	camera.ID @ ADDR ROIWidth ADDR ROIHeight ADDR ROIBin ADDR ASIImgType ASIGetROIFormat ASI.?ABORT
+	camera.ID ADDR ROIWidth ADDR ROIHeight ADDR ROIBin ADDR ASIImgType ASIGetROIFormat ASI.?ABORT
 	ROIWidth ROIHeight ROIBin
 ;
 
