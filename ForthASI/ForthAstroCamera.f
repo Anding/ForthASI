@@ -28,7 +28,7 @@
 	?dup
 	IF
 		\ loop over each connected camera
-		CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Handle" CR
+		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Handle" CR
 		0 do
 			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
 			ASICameraInfo ASI_CAMERA_ID @				( ID)
@@ -42,6 +42,8 @@
 			2dup tab type CR									( ID c-addr u)
 			($constant)											( --)
 		loop
+	ELSE
+	CR ." No connected cameras" CR
 	THEN
 	R> base !
 ;
@@ -68,7 +70,7 @@
 : what-camera? ( --)
 \ report the current camera to the user
 \ CameraID Name SerialNo MaxWidth MaxHeight
-	CR ." ID" tab ." Camera" tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height" CR	
+	CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height" CR	
 	camera.ID .	
 	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
 	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
@@ -77,7 +79,7 @@
 	ASISN @ tab u.
 	base !
 	ASICameraInfo ASI_MAX_WIDTH @ tab .
-	ASICameraInfo ASI_MAX_HEIGHT @ tab tab . CR
+	ASICameraInfo ASI_MAX_HEIGHT @ tab tab . CR CR
 ;
 
 ASI_GAIN 					ASI.define-get-control camera_gain
@@ -96,9 +98,6 @@ ASI_COOLER_ON				ASI.define-get-control	camera_cooler
 ASI_COOLER_ON				ASI.define-set-control	->camera_cooler
 ASI_ANTI_DEW_HEATER		ASI.define-get-control	camera_dew_heater
 ASI_ANTI_DEW_HEATER		ASI.define-set-control	->camera_dew_heater
-ASI_HUMIDITY				ASI.define-get-control	camera_humidity
-ASI_ENABLE_DDR				ASI.define-get-control	camera_DDR
-ASI_ENABLE_DDR				ASI.define-set-control	->camera_DDR
 ASI_FAN_ON					ASI.define-get-control	camera_fan
 ASI_FAN_ON					ASI.define-set-control	->camera_fan
 
