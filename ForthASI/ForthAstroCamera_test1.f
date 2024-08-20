@@ -36,9 +36,8 @@ what-camera?
 	." target_temperature " target_temperature . CR
 	." camera_cooler " camera_cooler . CR
 	." camera_dew_heater " camera_dew_heater . CR
-	." camera_humidity " camera_humidity . CR
 	." camera_fan " camera_fan . CR 
-	." camera_hardware_bin" camera_hardware_bin . CR
+	." camera_hardware_bin " camera_hardware_bin . CR
 ;
 
 review-camera
@@ -48,7 +47,7 @@ CR ." Set some controls" CR
 	1000 ->camera_exposure
 	100 ->camera_offset
 	80 ->camera_bandwidth
-	0 ->target_temperature
+	-5 ->target_temperature
 	cooler-on
 	fan-on
 	dew_heater-on
@@ -62,7 +61,7 @@ power-is-relay-switched [IF]
 
 	500 ms
 	1 relay-off
-	." Relay power off" CR
+	CR ." Relay power off" CR
 
 	remove-relays
 	
