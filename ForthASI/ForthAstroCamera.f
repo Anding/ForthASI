@@ -100,6 +100,8 @@ ASI_ANTI_DEW_HEATER		ASI.define-get-control	camera_dew_heater
 ASI_ANTI_DEW_HEATER		ASI.define-set-control	->camera_dew_heater
 ASI_FAN_ON					ASI.define-get-control	camera_fan
 ASI_FAN_ON					ASI.define-set-control	->camera_fan
+ASI_HARDWARE_BIN			ASI.define-get-control	camera_hardware_bin
+ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : camera_temperature
 \ return the camera temperature in integer Celcius
@@ -128,6 +130,14 @@ ASI_FAN_ON					ASI.define-set-control	->camera_fan
 
 : fan-off
 	0 ->camera_fan
+;
+
+: hardware_bin-on
+	1 ->camera_hardware_bin
+;
+
+: hardware_bin-off
+	0 ->camera_hardware_bin
 ;
 
 : camera_ROI ( -- width height bin) { | ROIWidth ROIHeight ROIBin ASIImgType }  \ VFX locals for pass-by-reference

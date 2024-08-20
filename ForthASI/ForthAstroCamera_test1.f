@@ -26,18 +26,36 @@ scan-cameras
 
 what-camera?
 
-." camera_gain " camera_gain . CR
-." camera_exposure " camera_exposure . CR
-." camera_offset " camera_offset . CR
-." cooler_power " cooler_power . CR
-." camera_bandwidth " camera_bandwidth . CR
-." camera_temperature " camera_temperature . CR
-." target_temperature " target_temperature . CR
-." camera_cooler " camera_cooler . CR
-." camera_dew_heater " camera_dew_heater . CR
-." camera_humidity " camera_humidity . CR
-." camera_DDR " camera_DDR . CR
-." camera_fan " camera_fan . CR 
+: review-camera
+	." camera_gain " camera_gain . CR
+	." camera_exposure " camera_exposure . CR
+	." camera_offset " camera_offset . CR
+	." cooler_power " cooler_power . CR
+	." camera_bandwidth " camera_bandwidth . CR
+	." camera_temperature " camera_temperature . CR
+	." target_temperature " target_temperature . CR
+	." camera_cooler " camera_cooler . CR
+	." camera_dew_heater " camera_dew_heater . CR
+	." camera_humidity " camera_humidity . CR
+	." camera_fan " camera_fan . CR 
+	." camera_hardware_bin" camera_hardware_bin . CR
+;
+
+review-camera
+
+CR ." Set some controls" CR
+	200 ->camera_gain
+	1000 ->camera_exposure
+	100 ->camera_offset
+	80 ->camera_bandwidth
+	0 ->target_temperature
+	cooler-on
+	fan-on
+	dew_heater-on
+	hardware_bin-on
+
+review-camera
+
 
 power-is-relay-switched [IF]
 \ Switch off the camera relay
