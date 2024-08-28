@@ -84,16 +84,16 @@
 
 ASI_GAIN 					ASI.define-get-control camera_gain
 ASI_GAIN 					ASI.define-set-control ->camera_gain
-ASI_EXPOSURE				ASI.define-get-control camera_exposure
-ASI_EXPOSURE				ASI.define-set-control	->camera_exposure
+ASI_EXPOSURE				ASI.define-get-control camera_exposure			\ uS
+ASI_EXPOSURE				ASI.define-set-control	->camera_exposure		\ uS
 ASI_OFFSET					ASI.define-get-control  camera_offset
 ASI_OFFSET					ASI.define-set-control	->camera_offset
 ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power 
 ASI_BANDWIDTHOVERLOAD	ASI.define-get-control	camera_bandwidth
 ASI_BANDWIDTHOVERLOAD	ASI.define-set-control	->camera_bandwidth
 ASI_TEMPERATURE			ASI.define-get-control	|camera_temperature|
-ASI_TARGET_TEMP			ASI.define-get-control	target_temperature
-ASI_TARGET_TEMP			ASI.define-set-control	->target_temperature
+ASI_TARGET_TEMP			ASI.define-get-control	target_temperature	\ C
+ASI_TARGET_TEMP			ASI.define-set-control	->target_temperature	\ C
 ASI_COOLER_ON				ASI.define-get-control	camera_cooler
 ASI_COOLER_ON				ASI.define-set-control	->camera_cooler
 ASI_ANTI_DEW_HEATER		ASI.define-get-control	camera_dew_heater
@@ -173,6 +173,37 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 : Secs ( S -- uS)
 \ convert S to uS
 	1000000 *
+;
+
+: pixel_size ( -- caddr u)
+\ return the size of one sensor pixel in um, as a string
+	ASICameraInfo ASI_PIXEL_SIZE tf@
+	3 (f.)
+;
+
+: effective_pixel_size ( -- caddr u)
+\ return the size of image pixel in um (includes binning), as a string
+	ASICameraInfo ASI_PIXEL_SIZE tf@
+	camera_binning s>f
+	f*
+	3 (f.)
+;
+
+: electrons_per_adu ( -- caddr u)
+\ return this paramater as a string
+	ASICameraInfo ASI_ELEC_PER_ADU sf@
+	3 (fs.)
+;
+
+: exposure_time ( -- caddr u)
+\ return the exposure time in seconds as a string
+	camera_exposure s>f
+	1.0e6 s>f f/
+	fdup 1.0e0 s>f f> if
+		0 (f.)
+	else
+		3 (f.)
+	then
 ;
 
 : start-exposure ( --)
