@@ -19,6 +19,7 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
+
 : scan-cameras ( -- )
 \ scan the plugged-in cameras
 \ create a CONSTANT (out of the name and S/N) for each CameraID
@@ -28,16 +29,19 @@
 	?dup
 	IF
 		\ loop over each connected camera
-		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Handle" CR
+		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height"  tab ." Handle" CR
 		0 do
 			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
+			ASI.convert-PIXEL_SIZE
 			ASICameraInfo ASI_CAMERA_ID @				( ID)
 			dup .
 			ASICameraInfo ASI_CAMERA_NAME zcount tab type			
 			dup ASIOpenCamera ASI.?ABORT
 			dup ASISN ASIGetSerialNumber ASI.?ABORT 	( ID)
 			dup ASICloseCamera ASI.?abort					( ID)
-			ASISN @ tab u. 									\ last 8 hex digits only				
+			ASISN @ tab u. 									\ last 8 hex digits only
+			ASICameraInfo ASI_MAX_WIDTH @ tab .
+			ASICameraInfo ASI_MAX_HEIGHT @ tab tab . 							
 			ASI.make-handle									( ID c-addr u)
 			2dup tab type CR									( ID c-addr u)
 			($constant)											( --)
@@ -73,6 +77,7 @@
 	CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height" CR	
 	camera.ID .	
 	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	ASI.convert-PIXEL_SIZE
 	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 	ASICameraInfo ASI_CAMERA_NAME zcount tab type
 	base @ hex									\ report the s/n in hex
@@ -177,13 +182,13 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : pixel_size ( -- caddr u)
 \ return the size of one sensor pixel in um, as a string
-	ASICameraInfo ASI_PIXEL_SIZE tf@
+	ASICameraInfo ASI_PIXEL_SIZE_SHORT sf@
 	6 (fs.)
 ;
 
 : effective_pixel_size ( -- caddr u)
 \ return the size of image pixel in um (includes binning), as a string
-	ASICameraInfo ASI_PIXEL_SIZE tf@
+	ASICameraInfo ASI_PIXEL_SIZE_SHORT sf@
 	camera_binning s>f
 	f*
 	6 (fs.)

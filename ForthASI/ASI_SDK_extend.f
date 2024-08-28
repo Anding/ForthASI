@@ -63,6 +63,24 @@
 	ASI.set-control
 ;
 
+: ASI.convert-PIXEL_SIZE
+\ convert PIXEL_SIZE double to float
+	ASICameraInfo ASI_PIXEL_SIZE @	\ sign(1)+exponent(11)+mantissaHi(20)
+	dup 	0x80000000 and 				\ extract sign bit
+	over 	0x7ff00000 and 				\ extract exponent
+	1023 - 127 +							\ rebase exponent
+	3 lshift									\ reposition exponent
+	rot 	0x000fffff and					\ extract mantissa
+	3 lshift									\ reposition mantissa
+	or or										\ combine sign(1)+exponent(8)+mantissaHi(20)
+	ASICameraInfo ASI_PIXEL_SIZE 4 + @	\ mantissaLo(32)
+	0xe000000 and							\ extract highest 3 bits of mantissa
+	29 rshift								\ reposition 
+	or											\ combine mantissaHi(20)+mantissaLo(3)
+	ASICameraInfo ASI_PIXEL_SIZE_SHORT !
+;
+
+
 
 
 		
