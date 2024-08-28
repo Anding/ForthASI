@@ -178,7 +178,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 : pixel_size ( -- caddr u)
 \ return the size of one sensor pixel in um, as a string
 	ASICameraInfo ASI_PIXEL_SIZE tf@
-	3 (f.)
+	6 (fs.)
 ;
 
 : effective_pixel_size ( -- caddr u)
@@ -186,20 +186,20 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	ASICameraInfo ASI_PIXEL_SIZE tf@
 	camera_binning s>f
 	f*
-	3 (f.)
+	6 (fs.)
 ;
 
 : electrons_per_adu ( -- caddr u)
 \ return this paramater as a string
 	ASICameraInfo ASI_ELEC_PER_ADU sf@
-	3 (fs.)
+	6 (f.)
 ;
 
 : exposure_time ( -- caddr u)
 \ return the exposure time in seconds as a string
 	camera_exposure s>f
-	1.0e6 s>f f/
-	fdup 1.0e0 s>f f> if
+	1.0e6 f/
+	fdup 1.0e0 f> if
 		0 (f.)
 	else
 		3 (f.)
