@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<!-- saved from url=(0080)https://cdn.diffractionlimited.com/help/maximdl/FITS_File_Header_Definitions.htm -->
+<html xmlns="http://www.w3.org/1999/xhtml" class="js-focus-visible" data-js-focus-visible="" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="chrome-extension://gehmmocbbkpblljhkekmfhjpfbkclbph/content/pageScripts/dashlane-webkit-animation-page-script.js" id="dashlane_webkit_animation"></script><script src="chrome-extension://gehmmocbbkpblljhkekmfhjpfbkclbph/content/pageScripts/dashlane-shadow-dom-page-script.js" id="dashlane_shadow_dom"></script><script src="chrome-extension://gehmmocbbkpblljhkekmfhjpfbkclbph/content/pageScripts/dashlane-webauthn-page-script.js" id="dashlane_webauthn" name="forward_webauthn_ready"></script>
+
+
+  <meta name="gRootRelPath" content=".">
+	<meta name="gCommonRootRelPath" content=".">
+  <meta name="gTopicId" content="4.0_1">
+  <script type="text/javascript" src="./MaximDL FITS definitions_files/rh.min.js.download"></script>
+  <script type="text/javascript" src="./MaximDL FITS definitions_files/common.min.js.download"></script>
+  <script type="text/javascript" src="./MaximDL FITS definitions_files/topic.min.js.download"></script>
+  <script type="text/javascript" src="./MaximDL FITS definitions_files/topicwidgets.min.js.download"></script>
+<script type="text/javascript" src="./MaximDL FITS definitions_files/projectsettings.js.download"></script>
+  <link rel="stylesheet" type="text/css" href="./MaximDL FITS definitions_files/topic.min.css">
+  <link rel="stylesheet" type="text/css" href="./MaximDL FITS definitions_files/topicheader.css">
+  <meta name="topic-status" content="Draft">
+
+  
+  <meta name="topic-status" content="In Progress">
+  <meta name="topic-priority" content="0">
+  <meta name="topic-time-estimate" content="0">
+  <meta name="topic-comment" content="">
+  <meta name="topic-id" content="FITS File Header Definitions">
+  <meta name="generator" content="Adobe RoboHelp 2022">
+  <title>FITS File Header Definitions</title>
+  <link rel="StyleSheet" href="./MaximDL FITS definitions_files/MaxIm_DL.css" type="text/css">
+  <meta name="rh-index-keywords" content="Header,keywords,16-bit,32-bit IEEE Float,64-bit IEEE Float,8-bit,ADU,APTAREA,APTDIA,Autoguider,Bias Frame,BITPIX,BSCALE,BZERO,BZERO:32768,CBLACK,CCD,CCD:types,CCD-TEMP,CCYY-MM-DDThh,Convert,CWHITE,Dark Frame,DARKTIME,DATAMAX,DATE-OBS,Declination,EGAIN,EXPTIME,File menu Batch Save,File menu Settings,FILTER,FITS,FITS:shortcoming,FITS:writing,FITS file,FITS file:reading,FITS File Header Definitions,FITS Header,Flat Frame,Flexible Image Transport System,FOCALLEN,HH MM SS,HISTORY,IMAGETYP,INSTRUME,ISO,Light Frame,Mandatory FITS,MaxIm DL,MaxIm DL Version,NAXIS,NAXIS1,NAXIS2,NAXIS3,NOTES,OBJCTDEC,OBJCTRA,OBJECT,OBJECTDEC,OBSERVER,Observer’s,PEDESTAL,Reading,Reading:FITS file,Right Ascension,SBIG,SBIG FITS,SBSTDVER,SET-TEMP,Setpoint,Settings,Settings dialog,Shortcoming,Shortcoming:FITS,SIMPLE,SITELAT,SITELONG,Ss.sss,Subframe,SWCREATE,SWMODIFY,TELESCOP,Telescope Control window,TIME-OBS,TRAKTIME,Tricolor Image,Types,Types:CCD,Universal,Writing,Writing:FITS,XBINNING,XORGSUBF,XPIXSZ,Y,Y2K,YBINNING,YORGSUBF,YPIXSZ">
+<script type="text/javascript" charset="utf-8" src="./MaximDL FITS definitions_files/screendata.js.download"></script><script type="text/javascript" charset="utf-8" src="./MaximDL FITS definitions_files/parentdata.js.download"></script></head>
+
+<body>
+  <div class="topic-header" id="rh-topic-header">
+    <div class="logo">
+    </div>
+    <div class="nav">
+      <div class="title" title="MaxIm DL">
+        <span>MaxIm DL</span>
+      </div>
+      <div class="gotohome" title="Click here to see this page in full context">
+        <a href="https://cdn.diffractionlimited.com/help/maximdl/FITS_File_Header_Definitions.htm#" onclick="rh._.goToFullLayout()">Click here to see this page in full context</a>
+      </div>
+    </div>
+  </div>
+  <div class="topic-header-shadow" id="rh-topic-header-shadow"></div>
+
+
+
+  <h1>FITS File Header Definitions</h1>
+  <p>The native file format for MaxIm DL images is FITS (Flexible Image Transport System), a standard widely used in the astronomical community. This is an excellent choice for all types of astronomical images since the format supports 16-bit and floating-point data, and it includes a flexible and highly extensible header. Various standard and widely used non-standard keywords can transfer information about the image between applications. In addition, public domain ”C” source code for reading and writing FITS files is available on the web.</p>
+  <p>One shortcoming of the FITS standard is that the 16-bit number format is signed, producing a range of -32768 to +32767. The range of data from many cameras is 0 to 65535. To overcome this problem, <span>MaxIm DL</span> subtracts 32768 from each pixel prior to saving. The FITS standard requires that the BZERO and BSCALE keywords be used when the value in the array is not the physical value; <span>MaxIm DL</span> sets BZERO to 32768 and BSCALE to 1. Other applications that interpret these keywords correctly should automatically add 32768 to the image pixels, resulting in a correct image display. This default behavior can be overridden using the File menu Settings command.</p>
+  <p>The FITS compression method used by <span>MaxIm DL</span> is proprietary and is not compatible with other software packages. If you need to transfer images to another package, you must save the images as uncompressed. If you need to convert a large number of images, use the File menu Batch Save and Convert command.</p>
+  <p>MaxIm DL is compliant with the SBIG proposal for FITS keyword extensions. This means that various optional and non-standard keywords are written in a fashion that is compatible with a number of other astronomical imaging packages. See <a href="http://archive.sbig.com/pdffiles/SBFITSEXT_1r0.pdf" target="_blank">http://archive.sbig.com/pdffiles/SBFITSEXT_1r0.pdf</a> for more information.</p>
+  <p>&nbsp;</p>
+  <p>Mandatory FITS keywords are as follows:</p>
+  <ul class="p" style="list-style: disc;">
+    <li class="p">
+      <p>SIMPLE – always ”T”, indicating a FITS header.</p>
+    </li>
+    <li class="p">
+      <p>BITPIX – indicates array format. Options include unsigned 8-bit (8), signed 16 bit (16), signed 32 bit (32), 32-bit IEEE float (-32), and 64-bit IEEE float (-64). The standard format is 16; -64 can be read by <span>MaxIm DL</span> but is not written.</p>
+    </li>
+    <li class="p">
+      <p>NAXIS – number of axes in the data array. <span>MaxIm DL</span> uses 2 for monochrome images, and 3 for color images.</p>
+    </li>
+    <li class="p">
+      <p>NAXIS1 – corresponds to the X axis.</p>
+    </li>
+    <li class="p">
+      <p>NAXIS2 – corresponds to the Y axis.</p>
+    </li>
+    <li class="p">
+      <p>NAXIS3 – present only for color images; value is always 3 (red, green, blue color planes are present in that order).</p>
+    </li>
+  </ul>
+  <p>Optional keywords defined by the FITS standard and used in <span>MaxIm DL</span>:</p>
+  <ul class="p" style="list-style: disc;">
+    <li class="p">
+      <p>BSCALE – this value should be multiplied by the data array values when reading the FITS file. MaxIm DL always writes a value of 1 for this keyword.</p>
+    </li>
+    <li class="p">
+      <p>BZERO – this value should be added to the data array values when reading the FITS file. For 16-bit integer files, MaxIm DL writes 32768 (unless overridden by the Settings dialog).</p>
+    </li>
+    <li class="p">
+      <p>DATE-OBS – date of observation in the ISO standard 8601 format (Y2K compliant FITS): CCYY-MM-DDThh:mm:ss.sss. The Universal time at the start of the exposure is used. Note: the alternate format using DATE-OBS and TIME-OBS is not written, but MaxIm DL will correctly interpret it when read. The time is written to 10 ms resolution. The default behavior is to report the start of observation time, but individual camera drivers can change this. &nbsp;As of Version 6.24 the DL Imaging driver sets the time to exposure midpoint.</p>
+    </li>
+    <li class="p">
+      <p>HISTORY – indicates the processing history of the image. This keyword may be repeated as many times as necessary.</p>
+    </li>
+    <li class="p">
+      <p>INSTRUME – camera information. Either user entered or obtained from the camera driver.</p>
+    </li>
+    <li class="p">
+      <p>OBJECT – name or catalog number of object being imaged, if available from Observatory Control Panel or specified by the user in Settings.</p>
+    </li>
+    <li class="p">
+      <p>OBSERVER – user-entered information; the observer’s name.</p>
+    </li>
+    <li class="p">
+      <p>TELESCOP – user-entered information about the telescope used.</p>
+    </li>
+  </ul>
+  <p>Extension keywords that may be added or read by MaxIm DL, depending on the current equipment and software configuration:</p>
+  <ul class="p" style="list-style: disc;">
+    <li class="p">
+      <p>AIRMASS – relative optical path length through atmosphere.</p>
+    </li>
+    <li class="p">
+      <p>AOCAMBT – ASCOM Observatory Conditions&nbsp;– Ambient temperature in degrees C</p>
+    </li>
+    <li class="p">
+      <p>AOCDEW – ASCOM Observatory Conditions&nbsp;– Dew point in degrees C</p>
+    </li>
+    <li class="p">
+      <p>AOCRAIN – ASCOM Observatory Conditions&nbsp;– Rain rate in mm/hour</p>
+    </li>
+    <li class="p">
+      <p>AOCHUM – ASCOM Observatory Conditions – Humidity in percent</p>
+    </li>
+    <li class="p">
+      <p>AOCWIND – ASCOM Observatory Conditions&nbsp;– Wind speed in m/s</p>
+    </li>
+    <li class="p">
+      <p>AOCWINDD – ASCOM Observatory Conditions&nbsp;– Wind direction in degrees (0..360)</p>
+    </li>
+    <li class="p">
+      <p>AOCWINDG – ASCOM Observatory Conditions&nbsp;– Wind gust in m/s</p>
+    </li>
+    <li class="p">
+      <p>AOCBAROM – ASCOM Observatory Conditions&nbsp;– Barometric pressure in hPa</p>
+    </li>
+    <li class="p">
+      <p>AOCCLOUD – ASCOM Observatory Conditions&nbsp;– Cloud coverage in percent</p>
+    </li>
+    <li class="p">
+      <p>AOCSKYBR – ASCOM Observatory Conditions&nbsp;– Sky brightness in Lux</p>
+    </li>
+    <li class="p">
+      <p>AOCSKYQU – ASCOM Observatory Conditions&nbsp;– Sky quality (magnitudes per square arcsecond)</p>
+    </li>
+    <li class="p">
+      <p>AOCSKYT – ASCOM Observatory Conditions&nbsp;– Sky temperature in degrees C</p>
+    </li>
+    <li class="p">
+      <p>AOCFWHM – ASCOM Observatory Conditions&nbsp;– Seeing FWHM in arc seconds</p>
+    </li>
+    <li class="p">
+      <p>APTDIA – diameter of the telescope in millimeters.</p>
+    </li>
+    <li class="p">
+      <p>APTAREA – aperture area of the telescope in square millimeters. This value includes the effect of the central obstruction.</p>
+    </li>
+    <li class="p">
+      <p>BAYERPAT – if present the image has a valid Bayer color pattern.</p>
+    </li>
+    <li class="p">
+      <p>BOLTAMBT – Boltwood Cloud Sensor II ambient temperature in degrees C.</p>
+    </li>
+    <li class="p">
+      <p>BOLTCLOU – Boltwood Cloud Sensor II cloud condition.</p>
+    </li>
+    <li class="p">
+      <p>BOLTDAY – Boltwood Cloud Sensor II daylight level.</p>
+    </li>
+    <li class="p">
+      <p>BOLTDEW – Boltwood Cloud Sensor II dewpoint in degrees C.</p>
+    </li>
+    <li class="p">
+      <p>BOLTHUM – Boltwood Cloud Sensor II humidity in percent.</p>
+    </li>
+    <li class="p">
+      <p>BOLTRAIN – Boltwood Cloud Sensor II rain condition.</p>
+    </li>
+    <li class="p">
+      <p>BOLTSKYT – Boltwood Cloud Sensor II sky minus ambient temperature in degrees C.</p>
+    </li>
+    <li class="p">
+      <p>BOLTWIND – Boltwood Cloud Sensor II wind speed in km/h.</p>
+    </li>
+    <li class="p">
+      <p>CALSTAT – indicates calibration state of the image; B indicates bias corrected, D indicates dark corrected, F indicates flat corrected.</p>
+    </li>
+    <li class="p">
+      <p>CENTAZ – nominal Azimuth of center of image in degrees.</p>
+    </li>
+    <li class="p">
+      <p>CENTALT – nominal Altitude of center of image in degress.</p>
+    </li>
+    <li class="p">
+      <p>CBLACK – indicates the black point used when displaying the image (screen stretch).</p>
+    </li>
+    <li class="p">
+      <p>CSTRETCH – initial display screen stretch mode.</p>
+    </li>
+    <li class="p">
+      <p>CCD-TEMP – actual measured sensor temperature at the start of exposure in degrees C. Absent if temperature is not available.</p>
+    </li>
+    <li class="p">
+      <p>COLORTYP – type of color sensor Bayer array or zero for monochrome.</p>
+    </li>
+    <li class="p">
+      <p>CWHITE – indicates the white point used when displaying the image (screen stretch).</p>
+    </li>
+    <li class="p">
+      <p>DATAMAX – pixel values above this level are considered saturated.</p>
+    </li>
+    <li class="p">
+      <p>EXPTIME – duration of exposure in seconds.</p>
+    </li>
+    <li class="p">
+      <p>DARKTIME – dark current integration time, if recorded. May be longer than exposure time.</p>
+    </li>
+    <li class="p">
+      <p>EGAIN – electronic gain in photoelectrons per ADU.</p>
+    </li>
+    <li class="p">
+      <p>FILTER – name of selected filter, if filter wheel is connected.</p>
+    </li>
+    <li class="p">
+      <p>FLIPSTAT – indicates if the image has been flipped horizontally or vertically, or has been rotated 90 degrees clockwise or counter-clockwise. .</p>
+    </li>
+    <li class="p">
+      <p>FOCALLEN – focal length of the telescope in millimeters.</p>
+    </li>
+    <li class="p">
+      <p>FOCUSPOS – Focuser position in steps, if focuser is connected.</p>
+    </li>
+    <li class="p">
+      <p>FOCUSSSZ – Focuser step size in microns, if available.</p>
+    </li>
+    <li class="p">
+      <p>FOCUSTEM – Focuser temperature readout in degrees C, if available.</p>
+    </li>
+    <li class="p">
+      <p>IMAGETYP – type of image: Light Frame, Bias Frame, Dark Frame, Flat Frame, or Tricolor Image.</p>
+    </li>
+    <li class="p">
+      <p>INPUTFMT – format of file from which image was read.</p>
+    </li>
+    <li class="p">
+      <p>ISOSPEED – ISO camera setting, if camera uses ISO speeds.</p>
+    </li>
+    <li class="p">
+      <p>JD or JD_GEO – records the geocentric Julian Day of the start of exposure.</p>
+    </li>
+    <li class="p">
+      <p>JD-HELIO or JD_HELIO – records the Heliocentric Julian Date at the exposure midpoint.</p>
+    </li>
+    <li class="p">
+      <p>MIDPOINT – UT of midpoint of exposure.</p>
+    </li>
+    <li class="p">
+      <p>NOTES – user-entered information; free-form notes.</p>
+    </li>
+    <li class="p">
+      <p>OBJECT – name or designation of object being imaged.</p>
+    </li>
+    <li class="p">
+      <p>OBJCTALT – nominal altitude of center of image &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+    </li>
+    <li class="p">
+      <p>OBJCTAZ – nominal azimuth of center of image</p>
+    </li>
+    <li class="p">
+      <p>OBJCTDEC – Declination of object being imaged, string format DD MM SS, if available. Note: this is an approximate field center value only.</p>
+    </li>
+    <li class="p">
+      <p>OBJCTHA – nominal hour angle of center of image</p>
+    </li>
+    <li class="p">
+      <p>OBJCTRA – Right Ascension of object being imaged, string format HH MM SS, if available. Note: this is an approximate field center value only.</p>
+    </li>
+    <li class="p">
+      <p>PEDESTAL – add this value to each pixel value to get a zero-based ADU. Calibration in MaxIm DL sets this to 100.</p>
+    </li>
+    <li class="p">
+      <p>PIERSIDE – indicates side-of-pier status when connected to a German Equatorial mount.</p>
+    </li>
+    <li class="p">
+      <p>READOUTM – records the selected Readout Mode (if any) for the camera.</p>
+    </li>
+    <li class="p">
+      <p>ROTATANG – Rotator angle in degrees, if focal plane rotator is connected.</p>
+    </li>
+    <li class="p">
+      <p>ROWORDER – Images taken by MaxIm DL are always TOP-DOWN.</p>
+    </li>
+    <li class="p">
+      <p>SBSTDVER – string indicating the version of the SBIG FITS extensions supported.</p>
+    </li>
+    <li class="p">
+      <p>SET-TEMP – CCD temperature setpoint in degrees C. Absent if setpoint was not entered.</p>
+    </li>
+    <li class="p">
+      <p>SITELAT – latitude of the imaging site in degrees, if available. Uses the same format as OBJECTDEC.</p>
+    </li>
+    <li class="p">
+      <p>SITELONG – longitude of the imaging site in degrees, if available. Uses the same format as OBJECTDEC.</p>
+    </li>
+    <li class="p">
+      <p>SNAPSHOT – number of images combined.</p>
+    </li>
+    <li class="p">
+      <p>SWCREATE – string indicating the software used to create the file; will be ”MaxIm DL Version x.xx”, where x.xx is the current version number.</p>
+    </li>
+    <li class="p">
+      <p>SWMODIFY – string indicating the software that modified the file. May be multiple copies.</p>
+    </li>
+    <li class="p">
+      <p>TILEXY – indicates tile position within a mosaic.</p>
+    </li>
+    <li class="p">
+      <p>TRAKTIME – exposure time of the autoguider used during imaging.</p>
+    </li>
+    <li class="p">
+      <p>XBAYROFF – X offset of Bayer array on imaging sensor.</p>
+    </li>
+    <li class="p">
+      <p>YBAYROFF – Y offset of Bayer array on imaging sensor.</p>
+    </li>
+    <li class="p">
+      <p>XBINNING – binning factor used on X axis</p>
+    </li>
+    <li class="p">
+      <p>XORGSUBF – subframe origin on X axis</p>
+    </li>
+    <li class="p">
+      <p>XPIXSZ – physical X dimension of the sensor's pixels in microns (present only if the information is provided by the camera driver). Includes binning.</p>
+    </li>
+    <li class="p">
+      <p>YBINNING – binning factor used on Y axis</p>
+    </li>
+    <li class="p">
+      <p>YORGSUBF – subframe origin on Y axis</p>
+    </li>
+    <li class="p">
+      <p>YPIXSZ – physical Y dimension of the sensor's pixels in microns (present only if the information is provided by the camera driver). Includes binning.</p>
+    </li>
+  </ul>
+  <p>In addition, when <a href="https://cdn.diffractionlimited.com/help/maximdl/PinPoint_Astrometry.htm">PinPoint Astrometry</a> is used, World Coordinate System (WCS) information will be added to the FITS header.</p>
+  <p>Some of the above parameters can be viewed in the <a href="https://cdn.diffractionlimited.com/help/maximdl/HID_FILE_OPEN.htm">File Open</a> dialog. All are visible in the <a href="https://cdn.diffractionlimited.com/help/maximdl/HID_EDIT_FITSHEADER.htm">FITS Header Panel</a>.</p>
+
+<script type="text/javascript" src="./MaximDL FITS definitions_files/projectdata.js.download"></script></body></html>
