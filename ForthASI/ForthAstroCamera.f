@@ -1,10 +1,8 @@
 \ Forth lexicon for controlling an astronomical camera
 \ 	ASI version
-\ 	interactive version - errors will report and abort
 
 \ requires ASI_SDK.f
 \ requires ASI_SDK_extend.f
-\ requires XISF.f
 
 \ Lexicon conventions
 \ 	camera.word or cam.ID is a word within the encapsulation
