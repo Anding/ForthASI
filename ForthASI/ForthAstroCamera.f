@@ -17,72 +17,6 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
-
-: scan-cameras ( -- )
-\ scan the plugged-in cameras
-\ create a CONSTANT (out of the name and S/N) for each CameraID
-\ report the cameras and 
-	base @ >R hex									\ report the s/n in hex
-	ASIGetNumOfConnectedCameras ( -- n)
-	?dup
-	IF
-		\ loop over each connected camera
-		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height"  tab ." Handle" CR
-		0 do
-			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
-			ASICameraInfo ASI_CAMERA_ID @				( ID)
-			dup .
-			ASICameraInfo ASI_CAMERA_NAME zcount tab type			
-			dup ASIOpenCamera ASI.?ABORT
-			dup ASISN ASIGetSerialNumber ASI.?ABORT 	( ID)
-			dup ASICloseCamera ASI.?abort					( ID)
-			ASISN @ tab u. 									\ last 8 hex digits only
-			ASICameraInfo ASI_MAX_WIDTH @ tab .
-			ASICameraInfo ASI_MAX_HEIGHT @ tab tab . 							
-			ASI.make-handle									( ID c-addr u)
-			2dup tab type CR									( ID c-addr u)
-			($constant)											( --)
-		loop
-	ELSE
-	CR ." No connected cameras" CR
-	THEN
-	R> base !
-;
-
-: add-camera ( CameraID --)
-\ make a camera available for application use
-\ 	connect the camera and initialize it with a full frame
-	dup ASIOpenCamera ASI.?abort
-	dup ASIInitCamera ASI.?abort
-	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	( ID) ASICameraInfo ASI_MAX_WIDTH @ ASICameraInfo ASI_MAX_HEIGHT @ 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
-;
-
-: remove-camera ( CameraID --)
-\ disconnect the camera, it becomes unavailable to the application
-	ASICloseCamera ASI.?abort
-;
-
-: use-camera ( CameraID --)
-\ choose the camera to be selected for operations
-	-> camera.ID
-;
-
-: what-camera? ( --)
-\ report the current camera to the user
-\ CameraID Name SerialNo MaxWidth MaxHeight
-	CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height" CR	
-	camera.ID .	
-	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
-	ASICameraInfo ASI_CAMERA_NAME zcount tab type
-	base @ hex									\ report the s/n in hex
-	ASISN @ tab u.
-	base !
-	ASICameraInfo ASI_MAX_WIDTH @ tab .
-	ASICameraInfo ASI_MAX_HEIGHT @ tab tab . CR CR
-;
-
 ASI_GAIN 					ASI.define-get-control camera_gain
 ASI_GAIN 					ASI.define-set-control ->camera_gain
 ASI_EXPOSURE				ASI.define-get-control camera_exposure			\ uS
@@ -161,21 +95,6 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	camera_ROI drop rot ->camera_ROI
 ;
 
-: uSecs ( uS -- uS)
-\ convert uS to uS
-\ for syntax consistency only
-;
-
-: mSecs ( mS -- uS)
-\ convert uS to mS
-	1000 *
-;
-
-: Secs ( S -- uS)
-\ convert S to uS
-	1000000 *
-;
-
 : pixel_size ( -- caddr u)
 \ return the size of one sensor pixel in um, as a string
 	ASICameraInfo ASI_PIXEL_SIZE df@
@@ -196,6 +115,24 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	6 (f.)
 ;
 
+: camera_name ( -- caddr u)
+\ return the name of the camera
+	ASICameraInfo ASI_CAMERA_NAME zcount
+;
+
+: camera_SN   ( -- caddr u)
+\ return the S/N of the camera as a hex string
+	base @ hex
+	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
+	ASISN 2@ <# #s #> 	\ VFX has no word (ud.)
+	base !
+;
+
+: camera_pixels ( -- x y)
+	ASICameraInfo ASI_MAX_WIDTH @
+	ASICameraInfo ASI_MAX_HEIGHT @
+;
+
 : exposure_time ( -- caddr u)
 \ return the exposure time in seconds as a string
 	camera_exposure s>f
@@ -207,6 +144,47 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	then
 ;
 
+: scan-cameras ( -- )
+\ scan the plugged-in cameras
+\ create a CONSTANT (out of the name and S/N) for each CameraID
+	ASIGetNumOfConnectedCameras ( -- n)
+	?dup
+	IF	\ loop over each connected camera
+		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height"  tab ." Handle" CR
+		0 do
+			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
+			ASICameraInfo ASI_CAMERA_ID @					( ID)
+			dup -> camera.ID dup .			
+			camera_name tab type camera_SN tab type camera_pixels tab type					
+			ASI.make-handle									( ID c-addr u)
+			2dup tab type CR									( ID c-addr u)
+			($constant)											( --)
+		loop
+	ELSE
+	CR ." No connected cameras" CR
+	THEN
+;
+
+: add-camera ( CameraID --)
+\ make a camera available for application use
+\ 	connect the camera and initialize it with a full frame
+	dup ASIOpenCamera ASI.?abort
+	dup ASIInitCamera ASI.?abort
+	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	camera_pixels 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
+;
+
+: use-camera ( CameraID --)
+\ choose the camera to be selected for operations, camera must be added first
+	dup -> camera.ID
+	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+;
+
+: remove-camera ( CameraID --)
+\ disconnect the camera, it becomes unavailable to the application
+	ASICloseCamera ASI.?abort
+;
+
 : start-exposure ( --)
 \ initiate an exposure
 	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
@@ -214,15 +192,48 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 ;
 
 : stop-exposure ( --)
-\ stop an exposure
+\ stop an exposure as an exception
 	camera.ID ASIStopExposure ASI.?abort
 ;
 
 : exposure_status ( -- ASI_EXPOSURE_STATUS) { | exposureStatus }
+\ return the exposure status of the camera
+\ 		ASI_EXP_IDLE 		\ idle states, you can start exposure now
+\ 		ASI_EXP_WORKING	\ exposing
+\ 		ASI_EXP_SUCCESS	\ exposure finished and waiting for download
+\ 		ASI_EXP_FAILED	
 	camera.ID ADDR exposureStatus ASIGetExpStatus ASI.?abort
 	exposureStatus
 ;
 
 : download-image ( addr u --)
 	camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
+;
+
+\ convenience functions
+
+: what-camera? ( --)
+\ report the current camera to the user
+	CR
+	." ID" 		camera.ID .	
+	." Name" 	camera_name tab type
+	." S/N"		camera_SN tab type
+	." Max_width"	camera_pixels swap tab . 
+	." Max_height"	tab .
+	CR
+;
+
+: uSecs ( uS -- uS)
+\ convert uS to uS
+\ for syntax consistency only
+;
+
+: mSecs ( mS -- uS)
+\ convert uS to mS
+	1000 *
+;
+
+: Secs ( S -- uS)
+\ convert S to uS
+	1000000 *
 ;
