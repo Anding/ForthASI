@@ -122,10 +122,10 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : camera_SN   ( -- caddr u)
 \ return the S/N of the camera as a hex string
-	base @ hex
+	base @ >R hex
 	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 	ASISN 2@ <# #s #> 	\ VFX has no word (ud.)
-	base !
+	R> base !
 ;
 
 : camera_pixels ( -- x y)
@@ -144,45 +144,48 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	then
 ;
 
-: scan-cameras ( -- )
-\ scan the plugged-in cameras
-\ create a CONSTANT (out of the name and S/N) for each CameraID
-	ASIGetNumOfConnectedCameras ( -- n)
-	?dup
-	IF	\ loop over each connected camera
-		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab ." Max_Width" tab ." Max_Height"  tab ." Handle" CR
-		0 do
-			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
-			ASICameraInfo ASI_CAMERA_ID @					( ID)
-			dup -> camera.ID dup .			
-			camera_name tab type camera_SN tab type camera_pixels tab type					
-			ASI.make-handle									( ID c-addr u)
-			2dup tab type CR									( ID c-addr u)
-			($constant)											( --)
-		loop
-	ELSE
-	CR ." No connected cameras" CR
-	THEN
-;
-
 : add-camera ( CameraID --)
 \ make a camera available for application use
 \ 	connect the camera and initialize it with a full frame
 	dup ASIOpenCamera ASI.?abort
 	dup ASIInitCamera ASI.?abort
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	camera_pixels 1 ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
+	camera_pixels 1 ( id width height bin) ASI_IMG_RAW16 ( ...16bit_unsigned) ASISetROIFormat ASI.?abort
 ;
 
 : use-camera ( CameraID --)
 \ choose the camera to be selected for operations, camera must be added first
 	dup -> camera.ID
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	drop
 ;
 
 : remove-camera ( CameraID --)
 \ disconnect the camera, it becomes unavailable to the application
 	ASICloseCamera ASI.?abort
+;
+
+: scan-cameras ( -- )
+\ scan the plugged-in cameras
+\ create a CONSTANT (out of the name and S/N) for each CameraID
+	ASIGetNumOfConnectedCameras ( -- n)
+	?dup
+	IF	\ loop over each connected camera
+		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab tab ." Max_width" tab ." Max_height"  tab ." Handle" CR
+		0 do
+			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
+			ASICameraInfo ASI_CAMERA_ID @					( ID)
+			dup . -> camera.ID	
+			camera.ID ASIOpenCamera ASI.?abort	
+			camera_name tab type camera_SN tab type camera_pixels tab . tab tab .
+			camera.ID ASICloseCamera ASI.?abort			
+			camera.ID ASI.make-handle							( ID c-addr u)
+			2dup tab tab type CR									( ID c-addr u)
+			($constant)											( --)
+		loop
+	ELSE
+	CR ." No connected cameras" CR
+	THEN
 ;
 
 : start-exposure ( --)
@@ -214,13 +217,13 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : what-camera? ( --)
 \ report the current camera to the user
-	CR
-	." ID" 		camera.ID .	
-	." Name" 	camera_name tab type
-	." S/N"		camera_SN tab type
-	." Max_width"	camera_pixels swap tab . 
-	." Max_height"	tab .
-	CR
+	CR ." ID" 		camera.ID tab tab .	
+	CR ." Name" 	camera_name tab tab type
+	CR ." S/N"		camera_SN tab tab type
+	CR ." Max_width"	camera_pixels swap tab . 
+	CR ." Max_height" tab .
+	CR ." Pixel_size" pixel_size tab type
+	CR CR
 ;
 
 : uSecs ( uS -- uS)
