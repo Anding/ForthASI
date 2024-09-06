@@ -7,8 +7,8 @@ include "%idir%\ForthAstroCamera.f"
 include "%idir%\..\..\ForthBase\serial\VFX32serial.f"
 include "%idir%\..\..\ForthKMTronic\KMTronic_Bidmead.f"
 include "%idir%\..\..\ForthKMTronic\KMTronic.f"
-include "%idir%"\..\..\forth-map\map.fs"
-include "%idir%"\..\..\forth-map\map-tools.fs"
+include "%idir%\..\..\forth-map\map.fs"
+include "%idir%\..\..\forth-map\map-tools.fs"
 include "%idir%\ForthAstroCameraFITS.f"
 
 -1 constant power-is-relay-switched

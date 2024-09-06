@@ -59,7 +59,7 @@ end-enum
 : add-cameraFITS ( map --)
 \ add key value pairs for FITS camara parameters
 	>R
-	s" T"								R@ =>" SIMPLE"
+	s" T"	R@ =>" SIMPLE"
 	s" 16"							R@ =>" BITPIX"
 	s" 1.0"							R@ =>" BSCALE"
 	s" 0.0"							R@ =>" BZERO"		
