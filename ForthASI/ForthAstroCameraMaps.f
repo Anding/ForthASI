@@ -1,4 +1,4 @@
-\ Add FITS keywords to a map
+\ Add FITS and XISF keywords to a map
 \ 	ASI version
 
 \ requires forthbase.f
@@ -7,8 +7,8 @@
 \ requires maps.fs
 \ requires map-tools.fs
 
-\ FITS keywords
-\ =============
+\ FITS keywords supported by MaxImDL
+\ ==================================
 \ SIMPLE – always ”T”, indicating a FITS header.
 \ BITPIX – indicates array format. Options include unsigned 8-bit (8), signed 16 bit (16), signed 32 bit (32), 32-bit IEEE float (-32), and 64-bit IEEE float (-64)
 \ NAXIS – number of axes in the data array. MaxIm DL uses 2 for monochrome images, and 3 for color images
@@ -17,6 +17,7 @@
 \ NAXIS3 – present only for color images; value is always 3 (red, green, blue color planes are present in that order)
 \ BSCALE – this value should be multiplied by the data array values when reading the FITS file
 \ BZERO – this value should be added to the data array values when reading the FITS file
+\ INSTRUME - detector instrument name
 \ CCD-TEMP – actual measured sensor temperature at the start of exposure in degrees C
 \ EXPTIME – duration of exposure in seconds
 \ EGAIN – electronic gain in photoelectrons per ADU.
@@ -27,6 +28,15 @@
 \ XPIXSZ – physical X dimension of the sensor's pixels in microns. Includes binning.
 \ YBINNING – binning factor used on Y axis
 \ YPIXSZ – physical Y dimension of the sensor's pixels in microns. Includes binning.
+
+\ FITS keywords defined here for the ASI camera
+\ =============================================
+\ INSTRSN 	- detector serial number
+\ COOLER		- cooler on or off
+\ FAN			- fan on or off
+\ DEWHEAT	- dew heater on or off
+\ COOLPWR	- cooler power percentage
+\ BANDWIDT	- USB bandwidth
 
 begin-enum
 	+enum LIGHT
@@ -46,12 +56,16 @@ end-enum
 
 : XISFimagetype ( n - caddr u)
 	case
-	LIGHT of s" LIGHT" endof
-	BIAS of s" BIAS" endof
-	DARK of s" DARK" endof
-	FLAT of s" FLAT" endof
+	LIGHT of s" Light" endof
+	BIAS of s" Bias" endof
+	DARK of s" Dark" endof
+	FLAT of s" Flat" endof
 	." " rot endcase
 ;	
+
+: FITSonOff ( n -- caadr u)
+	if s" ON" else s" OFF" then
+;
 
 \ the camera driver does not know - this must be set manually or by script
 0 value image_type
@@ -75,8 +89,15 @@ end-enum
 	image_type FITSimagetype	R@ =>" IMAGETYP"
 	exposure_time					R@ =>" EXPTIME"																										
 	electrons_per_adu				R@ =>" EGAIN"
+	camera_name						R@ =>" INSTRUME"
 	camera_temperature (.)		R@ =>" CCD-TEMP"		
 	target_temperature (.)		R@ =>" SET-TEMP"	
+ 	camera_SN 						R@ =>" INSTRSN"
+ 	camera_cooler FITSonOFF		R@ =>" COOLER"
+ 	camera_fan FITSonOFF			R@ =>" FAN"
+ 	camera_dew_heater FITSonOFF	R@ =>" DEWHEAT"
+ 	cooler_power (.)				R@ =>" COOLPWR"
+ 	camera_bandwidth	(.)		R@ =>" BANDWIDT"
 	R> drop
 ;	
 

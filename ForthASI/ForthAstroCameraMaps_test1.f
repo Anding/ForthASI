@@ -9,7 +9,7 @@ include "%idir%\..\..\ForthKMTronic\KMTronic_Bidmead.f"
 include "%idir%\..\..\ForthKMTronic\KMTronic.f"
 include "%idir%\..\..\forth-map\map.fs"
 include "%idir%\..\..\forth-map\map-tools.fs"
-include "%idir%\ForthAstroCameraFITS.f"
+include "%idir%\ForthAstroCameraMaps.f"
 
 -1 constant power-is-relay-switched
 CR
