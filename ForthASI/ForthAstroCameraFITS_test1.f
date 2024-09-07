@@ -34,8 +34,7 @@ scan-cameras
 	camera_FITSmap add-cameraFITS
 	camera_FITSmap .map
 	
-		map-strings
-	map CONSTANT camera_map
+	map CONSTANT camera_XISFmap
 	camera_XISFmap add-cameraXISF
 	camera_XISFmap .map
 

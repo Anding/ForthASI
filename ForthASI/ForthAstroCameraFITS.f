@@ -41,7 +41,7 @@ end-enum
 	BIAS of s" Bias Frame" endof
 	DARK of s" Dark Frame" endof
 	FLAT of s" Flat Frame" endof
-	endcase s"  "
+	." " rot endcase
 ;
 
 : XISFimagetype ( n - caddr u)
@@ -50,7 +50,7 @@ end-enum
 	BIAS of s" BIAS" endof
 	DARK of s" DARK" endof
 	FLAT of s" FLAT" endof
-	endcase s"  "
+	." " rot endcase
 ;	
 
 \ the camera driver does not know - this must be set manually or by script
@@ -64,7 +64,7 @@ end-enum
 	s" 1.0"							R@ =>" BSCALE"
 	s" 0.0"							R@ =>" BZERO"		
 	s" 2"								R@ =>" NAXIS"
-	camera_ROI (width height bin)
+	camera_ROI ( width height bin)
 	rot (.)							R@ =>" NAXIS1"
 	swap (.) 						R@ =>" NAXIS2"
 	(.) 2dup 						R@ =>" XBINNING"
@@ -83,7 +83,7 @@ end-enum
 : add-cameraXISF ( map --)
 \ add key value pairs for XISF camera parameters
 	>R
-	s" UInt16" 						R@ =>" sampleFormat" R@ xml.keyval
+	s" UInt16" 						R@ =>" sampleFormat"
 	s" Gray" 						R@ =>" colorSpace"
 	image_type XISFimagetype	R@	=>" IMAGETYPE"
 	camera_offset (.)				R@ =>" OFFSET"
