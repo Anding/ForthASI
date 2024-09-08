@@ -123,7 +123,6 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 : camera_SN   ( -- caddr u)
 \ return the S/N of the camera as a hex string
 	base @ >R hex
-	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 	ASISN 2@ <# #s #> 	\ VFX has no word (ud.)
 	R> base !
 ;
@@ -157,6 +156,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 \ choose the camera to be selected for operations, camera must be added first
 	dup -> camera.ID
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	dup camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 	drop
 ;
 
@@ -177,6 +177,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 			ASICameraInfo ASI_CAMERA_ID @					( ID)
 			dup . -> camera.ID	
 			camera.ID ASIOpenCamera ASI.?abort	
+			camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 			camera_name tab type camera_SN tab type camera_pixels tab . tab tab .
 			camera.ID ASICloseCamera ASI.?abort			
 			camera.ID ASI.make-handle							( ID c-addr u)
