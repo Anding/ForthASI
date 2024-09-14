@@ -1,12 +1,13 @@
 \ test for ForthAstroCameraFITS.f
 
+include C:\MPE\VfxForth\Lib\Win32\Genio\SocketIo.fth
 include "%idir%\..\..\ForthBase\ForthBase.f"
 include "%idir%\ASI_SDK.f"
 include "%idir%\ASI_SDK_extend.f"
 include "%idir%\ForthAstroCamera.f"
 include "%idir%\..\..\ForthBase\serial\VFX32serial.f"
-include "%idir%\..\..\KMTronic\KMTronic_Bidmead.f"
-include "%idir%\..\..\KMTronic\KMTronic.f"
+include "%idir%\..\..\ForthKMTronic\KMTronic_Bidmead.f"
+include "%idir%\..\..\ForthKMTronic\KMTronic.f"
 include "%idir%\..\..\forth-map\map.fs"
 include "%idir%\..\..\forth-map\map-tools.fs"
 include "%idir%\ForthAstroCameraMaps.f"
@@ -25,8 +26,8 @@ power-is-relay-switched [IF]
 [THEN]
 
 scan-cameras
-0 add-camera
-0 use-camera
+ASI2600MM_031F add-camera
+ASI2600MM_031F use-camera
 500 ms
 
 	map-strings

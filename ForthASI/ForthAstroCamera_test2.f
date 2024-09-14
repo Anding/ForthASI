@@ -1,5 +1,6 @@
 \ test for ForthAstroCamera.f
 
+include C:\MPE\VfxForth\Lib\Win32\Genio\SocketIo.fth
 include "%idir%\..\..\ForthBase\ForthBase.f"
 include "%idir%\ASI_SDK.f"
 include "%idir%\ASI_SDK_extend.f"
@@ -22,8 +23,8 @@ power-is-relay-switched [IF]
 [THEN]
 
 scan-cameras
-0 add-camera
-0 use-camera
+ASI2600MM_031F add-camera
+ASI2600MM_031F use-camera
 500 ms
 
 ASICameraInfo CR ." ASI_CAMERA_NAME " ASI_CAMERA_NAME 64 dump

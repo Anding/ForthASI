@@ -123,7 +123,8 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 : camera_SN   ( -- caddr u)
 \ return the S/N of the camera as a hex string
 	base @ >R hex
-	ASISN 2@ <# #s #> 	\ VFX has no word (ud.)
+	ASISN dup @(n) swap 4 + @(n) swap		\ S/N is stored in big-endian format
+	<# # # # # # # # # # # # # # # # # #> 	\ VFX has no word (ud.)
 	R> base !
 ;
 
@@ -154,10 +155,9 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : use-camera ( CameraID --)
 \ choose the camera to be selected for operations, camera must be added first
-	dup -> camera.ID
-	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	dup camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
-	drop
+	-> camera.ID
+	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
 ;
 
 : remove-camera ( CameraID --)
@@ -171,18 +171,17 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	ASIGetNumOfConnectedCameras ( -- n)
 	?dup
 	IF	\ loop over each connected camera
-		CR ." ID" tab ." Camera" tab tab tab ." S/N" tab tab tab ." Max_width" tab ." Max_height"  tab ." Handle" CR
+		CR ." ID" tab  ." Handle" tab tab ." Camera" CR
 		0 do
 			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
 			ASICameraInfo ASI_CAMERA_ID @					( ID)
-			dup . -> camera.ID	
+			dup -> camera.ID .	
 			camera.ID ASIOpenCamera ASI.?abort	
 			camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
-			camera_name tab type camera_SN tab type camera_pixels tab . tab tab .
+			camera.ID ASI.make-handle 2dup tab type	( ID c-addr u)
+			($constant)											( --)			
+			camera_name tab type CR
 			camera.ID ASICloseCamera ASI.?abort			
-			camera.ID ASI.make-handle							( ID c-addr u)
-			2dup tab tab type CR									( ID c-addr u)
-			($constant)											( --)
 		loop
 	ELSE
 	CR ." No connected cameras" CR

@@ -18,15 +18,16 @@
 \ extract the model of an ASI camera from the ASI_CAMERA_NAME field
 \ assume that the name is formatted "ZWO ASI[MODEL]"
 	4 - swap 4 + swap
-	2dup despace
+	2dup despace 
+	9 min				\ limit to 9 characters in the model	
 ;
 
 : ASI.make-handle ( -- c-addr u)
 \ prepare a handle for the camera based on name and serial number
 \ assumes ASIGetCameraProperty and ASIGetSerialNumber have been called
 	base @ >R hex	\ s/n in hexadecimal
-	ASISN @ 0 
-	<# # # # #  	\ last 4 digits only 
+	ASISN w@(n) 0 
+	<# # # # #  	\ first 4 digits only 
 	'_' HOLD			\ separator
 	ASICameraInfo ASI_CAMERA_NAME zcount ASI.get-model HOLDS
 	#> 
@@ -34,8 +35,12 @@
 ;
 
 : ASI.get-control ( CameraID ASI_CONTROL_TYPE -- value) {  | ControlValue ControlAuto -- } \ VFX unassigned locals
-	ADDR ControlValue ADDR ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue ASI.?Abort
-	ControlValue
+	ADDR ControlValue ADDR ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue 
+	case
+		0 of ControlValue endof
+		3 of 0 exit 		endof \ invalid control type, just return 0
+		dup ASI.?Abort
+	endcase
 ;
 
 : ASI.set-control ( CameraID ASI_CONTROL_TYPE value --)
