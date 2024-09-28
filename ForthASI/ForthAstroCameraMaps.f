@@ -6,6 +6,7 @@
 \ requires ASI_SDK_extend.f
 \ requires maps.fs
 \ requires map-tools.fs
+\ requires forthbase/windows.f
 
 \ FITS keywords supported by MaxImDL
 \ ==================================
@@ -28,6 +29,7 @@
 \ XPIXSZ – physical X dimension of the sensor's pixels in microns. Includes binning.
 \ YBINNING – binning factor used on Y axis
 \ YPIXSZ – physical Y dimension of the sensor's pixels in microns. Includes binning.
+\ DATEOBS - UTC exposure time of the start of the image
 
 \ FITS keywords defined here for the ASI camera
 \ =============================================
@@ -37,6 +39,10 @@
 \ DEWHEAT	- dew heater on or off
 \ COOLPWR	- cooler power percentage
 \ BANDWIDT	- USB bandwidth
+\ UUID		- generated UUID
+
+UUIDlength buffer: UUIDstring  
+TSlength buffer: TSstring
 
 begin-enum
 	+enum LIGHT
@@ -73,7 +79,12 @@ end-enum
 : add-cameraFITS ( map --)
 \ add key value pairs for FITS camara parameters
 	>R
-	s" T"	R@ =>" SIMPLE"
+	s"  " 							R@ =>" #CAMERA"		\ a header to indicate the source of these FITS values
+	TSstring 0 timestamp			R@ =>" DATE-OBS"		\ UTC
+	TSstring 1 timestamp			R@ =>" LOCAL-DT"		\ local date and time
+ 	UUIDString make-UUID 		R@ =>" UUID"			\ generated UUID	
+	exposure_time					R@ =>" EXPTIME" 	
+	s" T"								R@ =>" SIMPLE"
 	s" 16"							R@ =>" BITPIX"
 	s" 1.0"							R@ =>" BSCALE"
 	s" 0.0"							R@ =>" BZERO"		
@@ -86,17 +97,16 @@ end-enum
 	effective_pixel_size	2dup	R@ =>" XPIXSZ"
 										R@ =>" YPIXSZ"	
 	camera_offset -1 * (.)		R@ =>" PEDESTAL"											
-	image_type FITSimagetype	R@ =>" IMAGETYP"
-	exposure_time					R@ =>" EXPTIME"																										
-	electrons_per_adu				R@ =>" EGAIN"
+	image_type FITSimagetype	R@ =>" IMAGETYP"																									
 	camera_name						R@ =>" INSTRUME"
+ 	camera_SN 						R@ =>" INSTRSN"	
+ 	electrons_per_adu				R@ =>" EGAIN"	
 	camera_temperature (.)		R@ =>" CCD-TEMP"		
 	target_temperature (.)		R@ =>" SET-TEMP"	
- 	camera_SN 						R@ =>" INSTRSN"
  	camera_cooler FITSonOFF		R@ =>" COOLER"
+ 	cooler_power (.)				R@ =>" COOLPWR" 	
  	camera_fan FITSonOFF			R@ =>" FAN"
  	camera_dew_heater FITSonOFF	R@ =>" DEWHEAT"
- 	cooler_power (.)				R@ =>" COOLPWR"
  	camera_bandwidth	(.)		R@ =>" BANDWIDT"
 	R> drop
 ;	
@@ -108,7 +118,7 @@ end-enum
 	s" Gray" 						R@ =>" colorSpace"
 	image_type XISFimagetype	R@	=>" IMAGETYPE"
 	camera_offset (.)				R@ =>" OFFSET"
-\  s"  "								R@ =>" SSID"
+   UUIDString zcount				R@ =>" SSID"				\ requires that add-cameraFITS has been called first
 	R> drop
 ;
 	

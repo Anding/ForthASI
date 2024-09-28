@@ -2,6 +2,7 @@
 
 include C:\MPE\VfxForth\Lib\Win32\Genio\SocketIo.fth
 include "%idir%\..\..\ForthBase\ForthBase.f"
+include "%idir%\..\..\ForthBase\windows\windows.f"
 include "%idir%\ASI_SDK.f"
 include "%idir%\ASI_SDK_extend.f"
 include "%idir%\ForthAstroCamera.f"
