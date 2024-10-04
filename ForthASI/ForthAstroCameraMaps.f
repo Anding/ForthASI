@@ -80,8 +80,9 @@ end-enum
 \ add key value pairs for FITS camara parameters
 	>R
 	s"  " 							R@ =>" #CAMERA"		\ a header to indicate the source of these FITS values
-	TSstring 0 timestamp			R@ =>" DATE-OBS"		\ UTC
-	TSstring 1 timestamp			R@ =>" LOCAL-DT"		\ local date and time
+	TSstring 0 timestamp			R@ =>" DATE-OBS"		\ UTC date and time in ISO format
+	TSstring 1 timestamp			R@ =>" LOCAL-DT"		\ local date and time in ISO format
+	TSstring 3 timestamp drop 10	R@ =>" LOCALDAY"	\ local date in midday to midday format
  	UUIDString make-UUID 		R@ =>" UUID"			\ generated UUID	
 	exposure_time					R@ =>" EXPTIME" 	
 	s" T"								R@ =>" SIMPLE"
