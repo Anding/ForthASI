@@ -1,6 +1,7 @@
 \ test for ASI_SDK.f
+include "%idir%\..\ForthBase\libraries\libraries.f"
+NEED forthbase
 
-include "%idir%\..\..\ForthBase\ForthBase.f"
 include "%idir%\ASI_SDK.f"
 	
 \ check DLL and extern status

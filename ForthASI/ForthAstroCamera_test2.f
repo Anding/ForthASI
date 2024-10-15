@@ -1,13 +1,14 @@
 \ test for ForthAstroCamera.f
 
-include C:\MPE\VfxForth\Lib\Win32\Genio\SocketIo.fth
-include "%idir%\..\..\ForthBase\ForthBase.f"
+include "%idir%\..\ForthBase\libraries\libraries.f"
+NEED forthbase
+NEED network
+NEED serial
+NEED ForthKMTronic
+
 include "%idir%\ASI_SDK.f"
 include "%idir%\ASI_SDK_extend.f"
 include "%idir%\ForthAstroCamera.f"
-include "%idir%\..\..\ForthBase\serial\VFX32serial.f"
-include "%idir%\..\..\ForthKMTronic\KMTronic_Bidmead.f"
-include "%idir%\..\..\ForthKMTronic\KMTronic.f"
 
 -1 constant power-is-relay-switched
 CR

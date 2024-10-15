@@ -1,6 +1,6 @@
 \ Forth lexicon for controlling an astronomical camera
 \ 	ASI version
-
+\ requires forthbase.f
 \ requires ASI_SDK.f
 \ requires ASI_SDK_extend.f
 
@@ -124,7 +124,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 \ return the S/N of the camera as a hex string
 	base @ >R hex
 	ASISN dup @(n) swap 4 + @(n) swap		\ S/N is stored in big-endian format
-	<# # # # # # # # # # # # # # # # # #> 	\ VFX has no word (ud.)
+	(ud.)
 	R> base !
 ;
 

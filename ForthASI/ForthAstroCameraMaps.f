@@ -44,34 +44,6 @@
 UUIDlength buffer: UUIDstring  
 TSlength buffer: TSstring
 
-begin-enum
-	+enum LIGHT
-	+enum BIAS
-	+enum DARK
-	+enum FLAT
-end-enum
-
-: FITSimagetype ( n -- caddr u)
-	case
-	LIGHT of s" Light Frame" endof
-	BIAS of s" Bias Frame" endof
-	DARK of s" Dark Frame" endof
-	FLAT of s" Flat Frame" endof
-	." " rot endcase
-;
-
-: XISFimagetype ( n - caddr u)
-	case
-	LIGHT of s" Light" endof
-	BIAS of s" Bias" endof
-	DARK of s" Dark" endof
-	FLAT of s" Flat" endof
-	." " rot endcase
-;	
-
-: FITSonOff ( n -- caadr u)
-	if s" ON" else s" OFF" then
-;
 
 \ the camera driver does not know - this must be set manually or by script
 0 value image_type
@@ -82,7 +54,7 @@ end-enum
 	s"  " 							R@ =>" #CAMERA"		\ a header to indicate the source of these FITS values
 	TSstring 0 timestamp			R@ =>" DATE-OBS"		\ UTC date and time in ISO format
 	TSstring 1 timestamp			R@ =>" LOCAL-DT"		\ local date and time in ISO format
-	TSstring 3 timestamp drop 10	R@ =>" LOCALDAY"	\ local date in midday to midday format
+	TSstring 3 timestamp drop 10	R@ =>" NIGHTOF"	\ local date in midday to midday format
  	UUIDString make-UUID 		R@ =>" UUID"			\ generated UUID	
 	exposure_time					R@ =>" EXPTIME" 	
 	s" T"								R@ =>" SIMPLE"
@@ -98,16 +70,16 @@ end-enum
 	effective_pixel_size	2dup	R@ =>" XPIXSZ"
 										R@ =>" YPIXSZ"	
 	camera_offset -1 * (.)		R@ =>" PEDESTAL"											
-	image_type FITSimagetype	R@ =>" IMAGETYP"																									
+	obs.type observationType	R@ =>" IMAGETYP"																									
 	camera_name						R@ =>" INSTRUME"
  	camera_SN 						R@ =>" INSTRSN"	
  	electrons_per_adu				R@ =>" EGAIN"	
 	camera_temperature (.)		R@ =>" CCD-TEMP"		
 	target_temperature (.)		R@ =>" SET-TEMP"	
- 	camera_cooler FITSonOFF		R@ =>" COOLER"
+ 	camera_cooler (.OnOff)		R@ =>" COOLER"
  	cooler_power (.)				R@ =>" COOLPWR" 	
- 	camera_fan FITSonOFF			R@ =>" FAN"
- 	camera_dew_heater FITSonOFF	R@ =>" DEWHEAT"
+ 	camera_fan (.OnOff)			R@ =>" FAN"
+ 	camera_dew_heater (.OnOff)	R@ =>" DEWHEAT"
  	camera_bandwidth	(.)		R@ =>" BANDWIDT"
 	R> drop
 ;	
@@ -117,9 +89,9 @@ end-enum
 	>R
 	s" UInt16" 						R@ =>" sampleFormat"
 	s" Gray" 						R@ =>" colorSpace"
-	image_type XISFimagetype	R@	=>" IMAGETYPE"
+	obs.type observationType	R@	=>" IMAGETYPE"
 	camera_offset (.)				R@ =>" OFFSET"
-   UUIDString zcount				R@ =>" SSID"				\ requires that add-cameraFITS has been called first
+   UUIDString zcount				R@ =>" UUID"				\ requires that add-cameraFITS has been called first
 	R> drop
 ;
 	
