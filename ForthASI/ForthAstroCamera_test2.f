@@ -1,6 +1,6 @@
 \ test for ForthAstroCamera.f
 
-include "%idir%\..\ForthBase\libraries\libraries.f"
+include "%idir%\..\..\ForthBase\libraries\libraries.f"
 NEED forthbase
 NEED network
 NEED serial
@@ -16,8 +16,7 @@ CR
 power-is-relay-switched [IF] 
 \ Switch on the camera relay
 
-	6 constant COM-KMTronic
-	COM-KMTronic add-relays
+	add-relays
 	1 relay-on
 	3000 ms
 	." Relay power on" CR

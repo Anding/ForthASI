@@ -1,6 +1,6 @@
 \ test for ForthAstroCamera.f
 
-include "%idir%\..\ForthBase\libraries\libraries.f"
+include "%idir%\..\..\ForthBase\libraries\libraries.f"
 NEED forthbase
 NEED network
 NEED serial
@@ -16,7 +16,7 @@ CR
 power-is-relay-switched [IF] 
 \ Switch on the camera relay
 
-	COM_KMT add-relays
+	add-relays
 	1 relay-on
 	3000 ms
 	." Relay power on" CR
@@ -45,8 +45,6 @@ what-camera?
 
 review-camera
 
-abort
-
 CR ." Set some controls" CR
 	200 ->camera_gain
 	1000 ->camera_exposure
@@ -67,7 +65,6 @@ power-is-relay-switched [IF]
 	500 ms
 	1 relay-off
 	CR ." Relay power off" CR
-
 	remove-relays
 	
 [THEN]

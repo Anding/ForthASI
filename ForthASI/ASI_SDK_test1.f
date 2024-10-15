@@ -1,5 +1,5 @@
 \ test for ASI_SDK.f
-include "%idir%\..\ForthBase\libraries\libraries.f"
+include "%idir%\..\..\ForthBase\libraries\libraries.f"
 NEED forthbase
 
 include "%idir%\ASI_SDK.f"
@@ -42,8 +42,8 @@ VARIABLE StartY
 			ASICameraInfo ASI_MECHANICAL_SHUTTER TAB ." ASI_MECHANICAL_SHUTTER " @ . CR
 			ASICameraInfo ASI_ST4_PORT TAB ." ASI_ST4_PORT " @ . CR
 			ASICameraInfo ASI_IS_COOLER_CAM TAB ." ASI_IS_COOLER_CAM " @ . CR
-			ASICameraInfo ASI_IS_USB3_HOST TAB ." ASI_IS_USB3_HOST " @ . CR
-			ASICameraInfo ASI_IS_USB3_CAMERA TAB ." ASI_IS_USB3_CAMERA " @ . CR
+			ASICameraInfo ASI_IS_USB3 TAB ." ASI_IS_USB3 " @ . CR
+			ASICameraInfo ASI_ELEC_PER_ADU TAB ." ASI_ELEC_PER_ADU " @ . CR
 			ASICameraInfo ASI_BIT_DEPTH TAB ." ASI_BIT_DEPTH " @ . CR
 			ASICameraInfo ASI_IS_TRIGGER_CAM TAB ." ASI_IS_TRIGGER_CAM " @ . CR
 			CR

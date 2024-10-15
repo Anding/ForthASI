@@ -1,6 +1,6 @@
 \ test for ForthAstroCamera.f
 
-include "%idir%\..\ForthBase\libraries\libraries.f"
+include "%idir%\..\..\ForthBase\libraries\libraries.f"
 NEED forthbase
 NEED network
 

@@ -70,7 +70,7 @@ TSlength buffer: TSstring
 	effective_pixel_size	2dup	R@ =>" XPIXSZ"
 										R@ =>" YPIXSZ"	
 	camera_offset -1 * (.)		R@ =>" PEDESTAL"											
-	obs.type observationType	R@ =>" IMAGETYP"																									
+\ 	obs.type observationType	R@ =>" IMAGETYP"																									
 	camera_name						R@ =>" INSTRUME"
  	camera_SN 						R@ =>" INSTRSN"	
  	electrons_per_adu				R@ =>" EGAIN"	
@@ -89,7 +89,7 @@ TSlength buffer: TSstring
 	>R
 	s" UInt16" 						R@ =>" sampleFormat"
 	s" Gray" 						R@ =>" colorSpace"
-	obs.type observationType	R@	=>" IMAGETYPE"
+\ 	obs.type observationType	R@	=>" IMAGETYPE"
 	camera_offset (.)				R@ =>" OFFSET"
    UUIDString zcount				R@ =>" UUID"				\ requires that add-cameraFITS has been called first
 	R> drop
