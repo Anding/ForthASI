@@ -1,6 +1,6 @@
 # ForthASI
 
-https://github.com/Anding/ForthASI
+<https://github.com/Anding/ForthASI>
 
 This code facilitates interactive control of ZWO ASI cameras using the Forth programming language.  The code facilitates 'engineering level' control of the cameras  (e.g. you allocate your own memory for image download).  Other repositories facilitate, for example, saving images in XISF format and controlling a filterwheel and focuser.
 
@@ -8,29 +8,29 @@ In the spirit of Forth there is no ready-made application! Any interested users 
 
 ## Requirements
 
-1. VFX Forth for Windows (32-bit version) at https://vfxforth.com/
+1. VFX Forth for Windows (32-bit version) at <https://vfxforth.com/>
 
-2. ZWO's ASI SDK at https://www.zwoastro.com/software/.
+2. ZWO's ASI SDK at <https://www.zwoastro.com/software/>
 
 	Copy ```AstroCamera2.dll``` (the 32-bit version) to the VFX Forth install directory, likely ```C:\MPE\VfxForth\Bin```
 
 3. Required Forth language supporting libraries 
 
-	https://github.com/Anding/ForthBase
+	<https://github.com/Anding/ForthBase>
 	
-	https://github.com/uho/forth-map
+	<https://github.com/uho/forth-map>
 
 4. Optional and complementary Forth language libraries
 
-	https://github.com/Anding/ForthXISF
+	<https://github.com/Anding/ForthXISF>
 	
-	https://github.com/Anding/ForthEFW
+	<https://github.com/Anding/ForthEFW>
 	
-	https://github.com/Anding/ForthEAF
+	<https://github.com/Anding/ForthEAF>
 	
-	https://github.com/Anding/ForthKMTronic
+	<https://github.com/Anding/ForthKMTronic>
 	
-	https://github.com/Anding/simple-tester
+	<https://github.com/Anding/simple-tester>
 
 
 
