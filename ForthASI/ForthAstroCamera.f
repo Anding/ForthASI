@@ -188,17 +188,6 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	THEN
 ;
 
-: start-exposure ( --)
-\ initiate an exposure
-	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
-	CR ." Exposing..." CR 
-;
-
-: stop-exposure ( --)
-\ stop an exposure as an exception
-	camera.ID ASIStopExposure ASI.?abort
-;
-
 : exposure_status ( -- ASI_EXPOSURE_STATUS) { | exposureStatus }
 \ return the exposure status of the camera
 \ 		ASI_EXP_IDLE 		\ idle states, you can start exposure now
@@ -209,8 +198,33 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	exposureStatus
 ;
 
+: wait-camera ( --)
+\ synchronous hold while an exposure is underway
+	BEGIN
+		exposure_status ASI_EXP_WORKING =
+	WHILE
+		50 ms
+	REPEAT
+;
+
+: start-exposure ( --)
+\ initiate an exposure
+	wait-camera
+	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
+;
+
+: stop-exposure ( --)
+\ stop an exposure as an exception
+	camera.ID ASIStopExposure ASI.?abort
+;
+
 : download-image ( addr u --)
-	camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
+	wait-camera
+	IF exposure_status ASI_EXP_SUCCESS =
+		camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
+	ELSE
+		abort" no image to download"
+	THEN
 ;
 
 \ convenience functions
