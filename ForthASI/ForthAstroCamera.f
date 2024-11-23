@@ -220,7 +220,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : download-image ( addr u --)
 	wait-camera
-	IF exposure_status ASI_EXP_SUCCESS =
+	exposure_status ASI_EXP_SUCCESS = IF
 		camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
 	ELSE
 		abort" no image to download"
