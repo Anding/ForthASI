@@ -137,10 +137,10 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 \ return the exposure time in seconds as a string
 	camera_exposure s>f
 	1.0e6 f/
-	fdup 1.0e0 f> if
-		0 (f.)
-	else
+	fdup 30.0e0 f< if
 		3 (f.)
+	else
+		0 (f.)
 	then
 ;
 
