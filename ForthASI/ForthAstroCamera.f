@@ -43,27 +43,27 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	|camera_temperature| ( temp*10) 5 + 10 /
 ;
 
-: cooler-on
+: camera_cooler-on
 	1 ->camera_cooler
 ;
 
-: cooler-off
+: camera_cooler-off
 	0 ->camera_cooler
 ;
 
-: dew_heater-on
+: camera_dew_heater-on
 	1 ->camera_dew_heater
 ;
 
-: dew_heater-off
+: camera_dew_heater-off
 	0 ->camera_dew_heater
 ;
 
-: fan-on
+: camera_fan-on
 	1 ->camera_fan
 ;
 
-: fan-off
+: camera_fan-off
 	0 ->camera_fan
 ;
 

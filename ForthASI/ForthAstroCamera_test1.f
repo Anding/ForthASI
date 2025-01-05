@@ -51,9 +51,9 @@ CR ." Set some controls" CR
 	100 ->camera_offset
 	80 ->camera_bandwidth
 	-5 ->target_temperature
-	cooler-on
-	fan-on
-	dew_heater-on
+	camera_cooler-on
+	camera_fan-on
+	camera_dew_heater-on
 	hardware_bin-on
 
 review-camera
