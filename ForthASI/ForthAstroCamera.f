@@ -123,7 +123,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 : camera_SN   ( -- caddr u)
 \ return the S/N of the camera as a hex string
 	base @ >R hex
-	ASISN dup @(n) swap 4 + @(n) swap		\ S/N is stored in big-endian format
+	ASISN dup @ ( n) swap 4 + @ ( n) swap		\ S/N is stored in big-endian format
 	(ud.)
 	R> base !
 ;

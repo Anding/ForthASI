@@ -1,6 +1,5 @@
 \ Forth words directly corresponding to the ASI SDK
-\ requires ForthBase.f
-
+need ForthBase
 
 LIBRARY: ASICamera2.dll
 

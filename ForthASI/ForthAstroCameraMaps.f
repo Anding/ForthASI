@@ -41,6 +41,8 @@
 \ BANDWIDT	- USB bandwidth
 \ UUID		- generated UUID
 
+NEED Windows
+
 UUIDlength buffer: UUIDstring  
 TSlength buffer: TSstring
 
