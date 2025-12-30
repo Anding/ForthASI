@@ -84,8 +84,8 @@ TSlength buffer: TSstring
 : add-cameraXISF ( map --)
 \ add key value pairs for XISF camera parameters
 	>R
-	s" UInt16" 						R@ =>" sampleFormat"
-	s" Gray" 						R@ =>" colorSpace"
+\  s" UInt16" 						R@ =>" sampleFormat"
+\  s" Gray" 						R@ =>" colorSpace"
 	camera_offset (.)				R@ =>" OFFSET"
 	R> drop
 ;
