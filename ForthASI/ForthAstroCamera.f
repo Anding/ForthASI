@@ -229,15 +229,12 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 \ convenience functions
 
-: what-camera? ( --)
+: check-camera ( --)
 \ report the current camera to the user
-	CR ." ID" 		camera.ID tab tab .	
-	CR ." Name" 	camera_name tab tab type
-	CR ." S/N"		camera_SN tab tab type
-	CR ." Max_width"	camera_pixels swap tab . 
-	CR ." Max_height" tab .
-	CR ." Pixel_size" pixel_size tab type
-	CR CR
+	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	CR 
+	." Camera ID = " camera.ID .	
+	." ; Name = " 	camera_name type
 ;
 
 : uSecs ( uS -- uS)
