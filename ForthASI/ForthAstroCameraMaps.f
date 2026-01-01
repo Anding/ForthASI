@@ -53,21 +53,21 @@ TSlength buffer: TSstring
 : add-cameraFITS ( map --)
 \ add key value pairs for FITS camara parameters
 	>R
-	s"  " 							R@ =>" #CAMERA"		\ a header to indicate the source of these FITS values	
 	s" T"								R@ =>" SIMPLE"
-	s" 16"							R@ =>" BITPIX"
-	s" 1.0"							R@ =>" BSCALE"
-	s" 0.0"							R@ =>" BZERO"		
-	s" 2"								R@ =>" NAXIS"
-	exposure_time					R@ =>" EXPTIME" 	
+	s" 16"							R@ =>" BITPIX"	
+	s" 2"								R@ =>" NAXIS"	
 	camera_ROI ( width height bin)
 	rot (.)							R@ =>" NAXIS1"
 	swap (.) 						R@ =>" NAXIS2"
 	(.) 2dup 						R@ =>" XBINNING"
-										R@ =>" YBINNING"
+										R@ =>" YBINNING"	
+	s" 1.0"							R@ =>" BSCALE"
+	s" 0.0"							R@ =>" BZERO"			
+	camera_offset -1 * (.)		R@ =>" PEDESTAL"		
+	exposure_time					R@ =>" EXPTIME" 	
+	s"  " 							R@ =>" #CAMERA"		\ a header to indicate the source of these FITS values		
 	effective_pixel_size	2dup	R@ =>" XPIXSZ"
-										R@ =>" YPIXSZ"	
-	camera_offset -1 * (.)		R@ =>" PEDESTAL"																																		
+										R@ =>" YPIXSZ"																																	
 	camera_name						R@ =>" INSTRUME"
  	camera_SN 						R@ =>" INSTRSN"	
  	electrons_per_adu				R@ =>" EGAIN"	
