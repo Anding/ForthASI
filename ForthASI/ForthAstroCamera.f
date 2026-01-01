@@ -198,8 +198,8 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	exposureStatus
 ;
 
-: wait-camera ( --)
-\ synchronous hold while an exposure is underway
+: wait-camera-free ( --)
+\ synchronous hold until the camera is free
 	BEGIN
 		exposure_status ASI_EXP_WORKING =
 	WHILE
@@ -207,9 +207,20 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	REPEAT
 ;
 
+: wait-camera-finished ( --)
+\ synchronous hold until the camera is finished exposing
+	BEGIN
+		exposure_status case
+			ASI_EXP_SUCCESS OF exit ENDOF
+			ASI_EXP_FAILED	OF CR ." Exposure failed" exit ENDOF
+		endcase
+		50 ms
+	AGAIN
+;	
+
 : start-exposure ( --)
 \ initiate an exposure
-	wait-camera
+	wait-camera-free
 	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
 ;
 
@@ -219,7 +230,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 ;
 
 : download-image ( addr u --)
-	wait-camera
+	wait-camera-finished
 	exposure_status ASI_EXP_SUCCESS = IF
 		camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
 	ELSE

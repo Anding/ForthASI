@@ -62,7 +62,8 @@ TSlength buffer: TSstring
 	(.) 2dup 						R@ =>" XBINNING"
 										R@ =>" YBINNING"	
 	s" 1.0"							R@ =>" BSCALE"
-	s" 0.0"							R@ =>" BZERO"			
+	s" 0.0"							R@ =>" BZERO"		
+	s" 2000.0"          R@ =>" EQUINOX" \ Equinox of celestial coordinate system		
 	camera_offset -1 * (.)		R@ =>" PEDESTAL"		
 	exposure_time					R@ =>" EXPTIME" 	
 	s"  " 							R@ =>" #CAMERA"		\ a header to indicate the source of these FITS values		
@@ -78,6 +79,7 @@ TSlength buffer: TSstring
  	camera_fan (.OnOff)			R@ =>" FAN"
  	camera_dew_heater (.OnOff)	R@ =>" DEWHEAT"
  	camera_bandwidth	(.)		R@ =>" BANDWIDT"
+ 	camera_gain (.)					R@ =>" GAIN"
 	R> drop
 ;	
 
