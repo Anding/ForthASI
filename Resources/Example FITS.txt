@@ -1,0 +1,54 @@
+SIMPLE  =                    T / FITS header                                    
+BITPIX  =                   16 / Bits per entry                                 
+NAXIS   =                    2 / Number of dimensions                           
+NAXIS1  =                 6248 / length of x axis                               
+NAXIS2  =                 4176 / length of y axis                               
+EQUINOX =               2000.0 / Equinox of celestial coordinate system
+DATAMIN =                    0 / Minimum data value                             
+DATAMAX =                  255 / Maximum data value                             
+BZERO   =                  0.0 / physical_value = BZERO + BSCALE * array_value  
+BSCALE  =                  1.0 / physical_value = BZERO + BSCALE * array_value  
+IMAGETYP=              'LIGHT' / Type of exposure
+DATE-OBS= '2026-01-01T13:23:44.4285863' / Time of observation (UTC)
+DATE-LOC= '2026-01-01T21:23:44.4285863' / Time of observation (local)
+DATE-AVG= '2026-01-01T13:23:54.6432920' / Averaged midpoint time (UTC)
+EXPOSURE=                 20.0 / [s] Exposure duration
+EXPTIME =                 20.0 / [s] Exposure duration
+INSTRUME=  'ZWO ASI2600MM Pro' / Imaging instrument name
+CAMERAID= 'ZWOptical_ZWO ASI2600MM Pro_' / Imaging instrument identifier
+GAIN    =                  200 / Sensor gain
+OFFSET  =                    1 / Sensor gain offset
+EGAIN   =    0.076800003647804 / [e-/ADU] Electrons per A/D unit
+XBINNING=                    1 / X axis binning factor
+YBINNING=                    1 / Y axis binning factor
+SET-TEMP=                  0.0 / [degC] CCD temperature setpoint
+CCD-TEMP=                 17.5 / [degC] CCD temperature
+XPIXSZ  =                 3.76 / [um] Pixel X axis size
+YPIXSZ  =                 3.76 / [um] Pixel Y axis size
+USBLIMIT=                   40 / Camera-specific USB setting
+SITEELEV=                 54.2 / [m] Observation site elevation
+SITELAT =     22.2964166666667 / [deg] Observation site latitude
+SITELONG=     114.022222222222 / [deg] Observation site longitude
+TELESCOP=      'Epsilon 160ED' / Name of telescope
+FOCALLEN=                530.0 / [mm] Focal length
+FOCRATIO=                  3.3 / Focal ratio
+RA      =     7.96184644759893 / [deg] RA of telescope
+DEC     =      4.2254291037256 / [deg] Declination of telescope
+CENTALT =     40.3547777777778 / [deg] Altitude of telescope
+CENTAZ  =     256.103694444444 / [deg] Azimuth of telescope
+AIRMASS =     1.54229808879807 / Airmass at frame center (Gueymard 1993)
+PIERSIDE=               'East' / Telescope pointing state
+OBJECT  =           'Snapshot' / Name of the object of interest
+OBJCTRA =           '00 31 51' / [H M S] RA of imaged object
+OBJCTDEC=          '+04 13 32' / [D M S] Declination of imaged object
+FOCNAME =                'EAF' / Focusing equipment name
+FOCPOS  =                 2570 / [step] Focuser position
+FOCUSPOS=                 2570 / [step] Focuser position
+FOCUSSZ =             600000.0 / [um] Focuser step size
+FOCTEMP =     25.1100006103516 / [degC] Focuser temperature
+FOCUSTEM=     25.1100006103516 / [degC] Focuser temperature
+FWHEEL  =                'EFW' / Filter Wheel name
+FILTER  =                  'L' / Active filter name
+SWCREATE= 'N.I.N.A. 3.2.0.9001 (x64)' / Software that created this file
+HISTORY  Imported from XISF file by the ASTAP program
+END                                                                             
