@@ -61,9 +61,9 @@ TSlength buffer: TSstring
 	swap (.) 						R@ =>" NAXIS2"
 	(.) 2dup 						R@ =>" XBINNING"
 										R@ =>" YBINNING"	
-	s" 1.0"							R@ =>" BSCALE"
-	s" 0.0"							R@ =>" BZERO"		
-	s" 2000.0"          R@ =>" EQUINOX" \ Equinox of celestial coordinate system		
+	s" 1"							R@ =>" BSCALE"
+	s" 32768"							R@ =>" BZERO"		\ BITBIX=16 is a signed data type in the range -32768 to 32737
+	s" 2000"          R@ =>" EQUINOX" \ Equinox of celestial coordinate system		
 	camera_offset -1 * (.)		R@ =>" PEDESTAL"		
 	exposure_time					R@ =>" EXPTIME" 	
 	s"  " 							R@ =>" #CAMERA"		\ a header to indicate the source of these FITS values		

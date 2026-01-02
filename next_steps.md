@@ -1,7 +1,9 @@
-ForthASI next steps
-===================
+## ForthASI next steps
 
-1. Testing ```ForthAstroCameraFITS.f```
+1. Add a facilty to interrupt / abandon exposures
 
-2. Further benchtesting with cameras, including 2 connected cameras
+2. Add all the ASI app FITS keys to images and in the same written format
+
+3. Check S/N reading against ASI app
+
 	
