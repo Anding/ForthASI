@@ -1,0 +1,35 @@
+SIMPLE  =                    T / file does conform to FITS standard             
+BITPIX  =                   16 / number of bits per data pixel                  
+NAXIS   =                    2 / number of data axes                            
+NAXIS1  =                 6248 / length of data axis 1                          
+NAXIS2  =                 4176 / length of data axis 2                          
+EXTEND  =                    T / FITS dataset may contain extensions            
+COMMENT   FITS (Flexible Image Transport System) format is defined in 'Astronomy
+COMMENT   and Astrophysics', volume 376, page 359; bibcode: 2001A&A...376..359H 
+BZERO   =                32768 / physical = BZERO + BSCALE*array_value          
+BSCALE  =                    1 / physical = BZERO + BSCALE*array_value          
+XBINNING=                    1 / Binning factor in width                        
+YBINNING=                    1 / Binning factor in height                       
+EXPOINUS=             30000000 / Exposure time in us                            
+GAIN    =                  100 / The ratio of output / input                    
+OFFSET  =                   50 / Brightness(offset) of image                    
+WB_RED  =                    0 / White Balance(Red)                             
+WB_BLUE =                  560 / White Balance(Blue)                            
+CBLACK  =                    0 / Initial display black level in ADUs            
+CWHITE  =                65535 / Initial display white level in ADUs            
+PEDESTAL=                    0 / Correction to add for zero-based ADU           
+SWCREATE= 'ASIImg  '           / Name of software that created the image        
+SWOWNER = 'ZWO     '           / Licensed owner of software                     
+DATE-OBS= '2026-01-02T14:47:36.118' / UTC start date of observation             
+DATE-STA= '2026-01-02T14:47:36.118' / UTC start date of exposure                
+DATE-END= '2026-01-02T14:48:06.118' / UTC end date of exposure                  
+BAYERPAT= 'NONE    '           / Debayer pattern,such as RGGB,BGGR,GRBG,GBRG    
+COLORTYP= 'RAW16   '           / Color space, such as RAW8,RAW16,RGB24          
+INPUTFMT= 'FITS    '           / Format of file from which image was read       
+INSTRUME= 'ZWO ASI2600MM Pro'  / Camera model                                   
+XPIXSZ  =                 3.76 / Pixel Width in um                              
+YPIXSZ  =                 3.76 / Pixel Height in um                             
+EXPOSURE=                  30. / Exposure time in seconds                       
+EXPTIME =                  30. / Total Exposure Time (s)                        
+CCD-TEMP=                 13.5 / CMOS sensor temperature in C                   
+END                                                                             
