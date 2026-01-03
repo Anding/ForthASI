@@ -17,26 +17,26 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
-ASI_GAIN 					ASI.define-get-control camera_gain
-ASI_GAIN 					ASI.define-set-control ->camera_gain
-ASI_EXPOSURE				ASI.define-get-control camera_exposure			\ uS
-ASI_EXPOSURE				ASI.define-set-control	->camera_exposure		\ uS
-ASI_OFFSET					ASI.define-get-control  camera_offset
-ASI_OFFSET					ASI.define-set-control	->camera_offset
-ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power 
-ASI_BANDWIDTHOVERLOAD	ASI.define-get-control	camera_bandwidth
-ASI_BANDWIDTHOVERLOAD	ASI.define-set-control	->camera_bandwidth
-ASI_TEMPERATURE			ASI.define-get-control	|camera_temperature|
-ASI_TARGET_TEMP			ASI.define-get-control	target_temperature	\ C
-ASI_TARGET_TEMP			ASI.define-set-control	->target_temperature	\ C
-ASI_COOLER_ON				ASI.define-get-control	camera_cooler
+ASI_GAIN                    ASI.define-get-control camera_gain
+ASI_GAIN                    ASI.define-set-control ->camera_gain
+ASI_EXPOSURE                ASI.define-get-control camera_exposure			\ uS
+ASI_EXPOSURE                ASI.define-set-control	->camera_exposure		\ uS
+ASI_OFFSET                  ASI.define-get-control  camera_offset
+ASI_OFFSET                  ASI.define-set-control	->camera_offset
+ASI_COOLER_POWER_PERC       ASI.define-get-control	cooler_power 
+ASI_BANDWIDTHOVERLOAD       ASI.define-get-control	camera_bandwidth
+ASI_BANDWIDTHOVERLOAD       ASI.define-set-control	->camera_bandwidth
+ASI_TEMPERATURE             ASI.define-get-control	|camera_temperature|
+ASI_TARGET_TEMP             ASI.define-get-control	target_temperature	\ C
+ASI_TARGET_TEMP             ASI.define-set-control	->target_temperature	\ C
+ASI_COOLER_ON               ASI.define-get-control	camera_cooler
 ASI_COOLER_ON				ASI.define-set-control	->camera_cooler
-ASI_ANTI_DEW_HEATER		ASI.define-get-control	camera_dew_heater
-ASI_ANTI_DEW_HEATER		ASI.define-set-control	->camera_dew_heater
-ASI_FAN_ON					ASI.define-get-control	camera_fan
-ASI_FAN_ON					ASI.define-set-control	->camera_fan
-ASI_HARDWARE_BIN			ASI.define-get-control	camera_hardware_bin
-ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
+ASI_ANTI_DEW_HEATER         ASI.define-get-control	camera_dew_heater
+ASI_ANTI_DEW_HEATER         ASI.define-set-control	->camera_dew_heater
+ASI_FAN_ON                  ASI.define-get-control	camera_fan
+ASI_FAN_ON                  ASI.define-set-control	->camera_fan
+ASI_HARDWARE_BIN            ASI.define-get-control	camera_hardware_bin
+ASI_HARDWARE_BIN            ASI.define-set-control	->camera_hardware_bin
 
 : camera_temperature
 \ return the camera temperature in integer Celcius
@@ -137,10 +137,10 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 \ return the exposure time in seconds as a string
 	camera_exposure s>f
 	1.0e6 f/
-	fdup 30.0e0 f< if
-		3 (f.)
+	fdup 1.0e0 f< if
+		3 (f.)              \ 3 dp under 1 second
 	else
-		0 (f.)
+		0 (f.)              \ 0 dp over 1 second
 	then
 ;
 
@@ -171,7 +171,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	ASIGetNumOfConnectedCameras ( -- n)
 	?dup
 	IF	\ loop over each connected camera
-		CR ." ID" tab  ." Handle" tab tab ." Camera" CR
+		CR ." ID" tab  ." Handle" tab tab ." Camera"
 		0 do
 			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
 			ASICameraInfo ASI_CAMERA_ID @					( ID)
@@ -190,9 +190,9 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : exposure_status ( -- ASI_EXPOSURE_STATUS) { | exposureStatus }
 \ return the exposure status of the camera
-\ 		ASI_EXP_IDLE 		\ idle states, you can start exposure now
-\ 		ASI_EXP_WORKING	\ exposing
-\ 		ASI_EXP_SUCCESS	\ exposure finished and waiting for download
+\ 		ASI_EXP_IDLE    \ idle states, you can start exposure now
+\ 		ASI_EXP_WORKING \ exposing
+\ 		ASI_EXP_SUCCESS \ exposure finished and waiting for download
 \ 		ASI_EXP_FAILED	
 	camera.ID ADDR exposureStatus ASIGetExpStatus ASI.?abort
 	exposureStatus
