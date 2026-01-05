@@ -135,13 +135,15 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 
 : exposure_time ( -- caddr u)
 \ return the exposure time in seconds as a string
-	camera_exposure s>f
-	1.0e6 f/
-	fdup 30.0e0 f< if
-		3 (f.)
-	else
-		0 (f.)
-	then
+	camera_exposure dup ( us)
+	1000000 > if          \  over 1 second as an integer
+	    1000000 /
+	    (.)
+	else                    
+	    s>f
+	    1.0e6 f/
+	    3 (f.)
+    then
 ;
 
 : add-camera ( CameraID --)
