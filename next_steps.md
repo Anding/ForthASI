@@ -1,8 +1,8 @@
 ## ForthASI next steps
 
-1. Add a facilty to interrupt / abandon exposures
+1. Add VT100 UI and diagnostics
 
-2. Add all the ASI app FITS keys to images and in the same written format
+2. Develop user level control words at ForthASI level (e.g. camera cooler control)
 
 3. Check S/N reading against ASI app
 
