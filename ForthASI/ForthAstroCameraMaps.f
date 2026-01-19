@@ -21,7 +21,10 @@ TSlength buffer: TSstring
 	swap (.)                        R@ =>" NAXIS2"
 	(.) 2dup                        R@ =>" XBINNING"
                                     R@ =>" YBINNING"	
-	camera_offset -1 * (.)          R@ =>" PEDESTAL"		
+    s" UInt16"                      R@ =>" SMPLFRMT"
+    s" Gray"                        R@ =>" COLORSPC"
+ 	camera_offset (.)               R@ =>" OFFSET"	    			                                    
+	camera_offset -1 * (.)          R@ =>" PEDESTAL"	
 	exposure_time                   R@ =>" EXPTIME"     \ in seconds with decimal places if less that 1 sec
 	camera_exposure (.)             R@ =>" EXPOINUS"    \ in micro seconds	
 	camera_exposure 1000 / (.)      R@ =>" EXPOINMS"    \ in milli seconds	
@@ -42,13 +45,5 @@ TSlength buffer: TSstring
 	R> drop
 ;	
 
-: add-cameraXISF ( map --)
-\ add key value pairs for XISF camera parameters
-	>R
-    s" UInt16"                      R@ =>" sampleFormat"    \ not used in writing the header
-    s" Gray"                        R@ =>" colorSpace"      \   which hardcodes these keys
-	camera_offset (.)               R@ =>" OFFSET"
-	R> drop
-;
 	
 
