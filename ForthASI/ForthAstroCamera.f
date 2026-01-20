@@ -17,26 +17,26 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
-ASI_GAIN 					ASI.define-get-control camera_gain
-ASI_GAIN 					ASI.define-set-control ->camera_gain
-ASI_EXPOSURE				ASI.define-get-control camera_exposure			\ uS
-ASI_EXPOSURE				ASI.define-set-control	->camera_exposure		\ uS
-ASI_OFFSET					ASI.define-get-control  camera_offset
-ASI_OFFSET					ASI.define-set-control	->camera_offset
+ASI_GAIN                ASI.define-get-control camera_gain
+ASI_GAIN                ASI.define-set-control ->camera_gain
+ASI_EXPOSURE            ASI.define-get-control camera_exposure			\ uS
+ASI_EXPOSURE            ASI.define-set-control	->camera_exposure		\ uS
+ASI_OFFSET              ASI.define-get-control  camera_offset
+ASI_OFFSET              ASI.define-set-control	->camera_offset
 ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power 
 ASI_BANDWIDTHOVERLOAD	ASI.define-get-control	camera_bandwidth
 ASI_BANDWIDTHOVERLOAD	ASI.define-set-control	->camera_bandwidth
 ASI_TEMPERATURE			ASI.define-get-control	|camera_temperature|
 ASI_TARGET_TEMP			ASI.define-get-control	target_temperature	\ C
 ASI_TARGET_TEMP			ASI.define-set-control	->target_temperature	\ C
-ASI_COOLER_ON				ASI.define-get-control	camera_cooler
-ASI_COOLER_ON				ASI.define-set-control	->camera_cooler
+ASI_COOLER_ON           ASI.define-get-control	camera_cooler
+ASI_COOLER_ON           ASI.define-set-control	->camera_cooler
 ASI_ANTI_DEW_HEATER		ASI.define-get-control	camera_dew_heater
 ASI_ANTI_DEW_HEATER		ASI.define-set-control	->camera_dew_heater
-ASI_FAN_ON					ASI.define-get-control	camera_fan
-ASI_FAN_ON					ASI.define-set-control	->camera_fan
-ASI_HARDWARE_BIN			ASI.define-get-control	camera_hardware_bin
-ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
+ASI_FAN_ON              ASI.define-get-control	camera_fan
+ASI_FAN_ON              ASI.define-set-control	->camera_fan
+ASI_HARDWARE_BIN        ASI.define-get-control	camera_hardware_bin
+ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 : camera_temperature
 \ return the camera temperature in integer Celcius
@@ -240,7 +240,7 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 	THEN
 ;
 
-\ convenience functions
+\ user lexicon
 
 : check-camera ( --)
 \ report the current camera to the user
@@ -263,4 +263,9 @@ ASI_HARDWARE_BIN			ASI.define-set-control	->camera_hardware_bin
 : Secs ( S -- uS)
 \ convert S to uS
 	1000000 *
+;
+
+: duration ( us --)
+\ set the exposure duration
+	->camera_exposure
 ;
