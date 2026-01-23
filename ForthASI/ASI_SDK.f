@@ -1,5 +1,6 @@
 \ Forth words directly corresponding to the ASI SDK
-need ForthBase
+NEED ForthBase
+NEED ForthVT100
 
 LIBRARY: ASICamera2.dll
 
@@ -31,30 +32,27 @@ Extern: int "C" ASISetStartPos( int CameraID , int StartX , int StartY ) ;
 Extern: int "C" ASIStartExposure( int CameraID, int IsDark ) ;
 Extern: int "C" ASIStopExposure( int CameraID ) ;
 
-: ASI.Error ( n -- caddr u)
+BEGIN-ENUMS ASI.Error ( n -- caddr u)
 \ return the ASI text error message
-	CASE
-	 0 OF s" SUCCESS" ENDOF
-	 1 OF s" INVALID_INDEX" ENDOF
-	 2 OF s" INVALID_ID" ENDOF
-	 3 OF s" INVALID_CONTROL_TYPE" ENDOF
-	 4 OF s" CAMERA_CLOSED" ENDOF	
-	 5 OF s" CAMERA_REMOVED" ENDOF	
-	 6 OF s" INVALID_PATH" ENDOF
-	 7 OF s" INVALID_FILEFORMAT" ENDOF
-	 8 OF s" INVALID_SIZE" ENDOF
-	 9 OF s" INVALID_IMGTYPE" ENDOF
-	10 OF s" OUTOF_BOUNDARY" ENDOF
-	11 OF s" TIMEOUT" ENDOF
-	12 OF s" INVALID_SEQUENCE" ENDOF
-	13 OF s" BUFFER_TOO_SMALL" ENDOF
-	14 OF s" VIDEO_MODE_ACTIVE" ENDOF
-	15 OF s" EXPOSURE_IN_PROGRESS" ENDOF
-	16 OF s" GENERAL_ERROR" ENDOF
-	17 OF s" INVALID_MODE" ENDOF
-	s" OTHER_ERROR" rot 							( caddr u n)  \ ENDCASE consumes the case selector
-	ENDCASE 
-;
+	+" CAMERA_SUCCESS" 
+	+" CAMERA_INVALID_INDEX" 
+	+" CAMERA_INVALID_ID" 
+	+" CAMERA_INVALID_CONTROL_TYPE" 
+	+" CAMERA_CLOSED" 	
+	+" CAMERA_REMOVED" 	
+	+" CAMERA_INVALID_PATH" 
+	+" CAMERA_INVALID_FILEFORMAT" 
+	+" CAMERA_INVALID_SIZE" 
+	+" CAMERA_INVALID_IMGTYPE" 
+	+" CAMERA_OUTOF_BOUNDARY" 
+	+" CAMERA_TIMEOUT" 
+	+" CAMERA_INVALID_SEQUENCE" 
+	+" CAMERA_BUFFER_TOO_SMALL" 
+	+" CAMERA_VIDEO_MODE_ACTIVE" 
+	+" CAMERA_EXPOSURE_IN_PROGRESS" 
+	+" CAMERA_GENERAL_ERROR" 
+	+" CAMERA_INVALID_MODE" 
+END-ENUMS 
 
 BEGIN-STRUCTURE ASI_CAMERA_INFO 		\ 240 bytes including padding
 64 +FIELD ASI_CAMERA_NAME
@@ -153,17 +151,16 @@ BEGIN-ENUM ( ASI_CAMERA_MODE )
 END-ENUM
 
 \ pass by reference to ASI library functions
-ASI_CAMERA_INFO	BUFFER: ASICameraInfo
+ASI_CAMERA_INFO     BUFFER: ASICameraInfo
 ASI_CONTROL_CAPS	BUFFER: ASIControlCaps
 ASI_ID				BUFFER: ASIID
 ASI_ID				BUFFER: ASISN
 
 \ do-or-die error handler
 : ASI.?abort ( n --)
-	flushKeys	
 	dup 
 	IF 
-		ASI.Error type CR
+		ASI.Error .>E CR
 		abort 
 	ELSE
 		drop	

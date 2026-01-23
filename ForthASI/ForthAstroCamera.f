@@ -17,6 +17,8 @@
 \ 	values over variables
 \ 	actions to the presently-selected-camera
 
+s" " $value asi.str1
+
 ASI_GAIN                ASI.define-get-control camera_gain
 ASI_GAIN                ASI.define-set-control ->camera_gain
 ASI_EXPOSURE            ASI.define-get-control camera_exposure			\ uS
@@ -26,7 +28,7 @@ ASI_OFFSET              ASI.define-set-control	->camera_offset
 ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power 
 ASI_BANDWIDTHOVERLOAD	ASI.define-get-control	camera_bandwidth
 ASI_BANDWIDTHOVERLOAD	ASI.define-set-control	->camera_bandwidth
-ASI_TEMPERATURE			ASI.define-get-control	|camera_temperature|
+ASI_TEMPERATURE			ASI.define-get-control	<camera_temperature>
 ASI_TARGET_TEMP			ASI.define-get-control	target_temperature	\ C
 ASI_TARGET_TEMP			ASI.define-set-control	->target_temperature	\ C
 ASI_COOLER_ON           ASI.define-get-control	camera_cooler
@@ -40,7 +42,7 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 : camera_temperature
 \ return the camera temperature in integer Celcius
-	|camera_temperature| ( temp*10) 5 + 10 /
+	<camera_temperature> ( temp*10) 5 + 10 /
 ;
 
 : camera_cooler-on
@@ -159,7 +161,10 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 \ choose the camera to be selected for operations, camera must be added first
 	-> camera.ID
 	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
+	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT       
+	camera_name $-> asi.str1 s"  " $+> asi.str1 
+	camera_pixels swap (.) $+> asi.str1 s"  x " $+> asi.str1 (.) $+> asi.str1 s"  pixels" $+> asi.str1  
+	cr asi.str1 .> cr
 ;
 
 : remove-camera ( CameraID --)
