@@ -160,7 +160,7 @@ ASI_ID				BUFFER: ASISN
 : ASI.?abort ( n --)
 	dup 
 	IF 
-		ASI.Error .>E CR
+		ASI.Error cr .>E cr
 		abort 
 	ELSE
 		drop	

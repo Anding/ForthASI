@@ -21,10 +21,7 @@ TSlength buffer: TSstring
 	swap (.)                        R@ =>" NAXIS2"
 	(.) 2dup                        R@ =>" XBINNING"
                                     R@ =>" YBINNING"	
-    s" UInt16"                      R@ =>" SMPLFRMT"
-    s" Gray"                        R@ =>" COLORSPC"
- 	camera_offset (.)               R@ =>" OFFSET"	    			                                    
-	camera_offset -1 * (.)          R@ =>" PEDESTAL"	
+	camera_offset -1 * (.)          R@ =>" PEDESTAL"                                    			                                    	
 	exposure_time                   R@ =>" EXPTIME"     \ in seconds with decimal places if less that 1 sec
 	camera_exposure (.)             R@ =>" EXPOINUS"    \ in micro seconds	
 	camera_exposure 1000 / (.)      R@ =>" EXPOINMS"    \ in milli seconds	
@@ -42,6 +39,10 @@ TSlength buffer: TSstring
  	camera_dew_heater (.OnOff)      R@ =>" DEWHEAT"
  	camera_bandwidth	(.)         R@ =>" USBLIMIT"    \ bandwidth
  	camera_gain (.)                 R@ =>" GAIN"
+ 	s" "                            R@ =>" #XISF"
+    s" UInt16"                      R@ =>" SMPLFRMT"
+    s" Gray"                        R@ =>" COLORSPC"
+ 	camera_offset (.)               R@ =>" OFFSET"	  			
 	R> drop
 ;	
 

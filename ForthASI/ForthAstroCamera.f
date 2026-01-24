@@ -82,9 +82,10 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	ROIWidth ROIHeight ROIBin
 ;
 
-: ->camera_ROI ( width height bin)
- 	camera.ID ( width height bin) ASI_IMG_RAW16 ( 16bit unsigned) 
-	ASISetROIFormat ASI.?abort
+: ->camera_ROI { width height bin -- }
+    width 8 / 8 * -> width      \ width%8 == 0
+    height 2 / 2 * -> height    \ height%2 ==0
+ 	camera.ID width height bin ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
 ;
 
 : camera_binning ( -- bin)
@@ -275,3 +276,17 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 \ set the exposure duration
 	->camera_exposure
 ;
+
+: fullframe ( --)
+\ set the camera to take full-frame images, and binning to 1
+    camera_pixels 1 ( width height bin) ->camera_ROI
+;
+
+: subframe ( p | --)
+\ set the subframe to a square p% of the smaller camera dimension, and binning to 1
+    camera_pixels min * 100 /               \ apply percentage
+    8 / 8 *                                 \ width%8 == 0 rule
+    dup 1 ( width height bin) ->camera_ROI 
+;
+    
+    
