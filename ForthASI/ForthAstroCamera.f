@@ -151,6 +151,7 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 : add-camera ( CameraID --)
 \ make a camera available for application use
 \ 	connect the camera and initialize it with a full frame
+    ASIGetNumOfConnectedCameras 0= if s" no connected cameras" cr .>E cr abort then
 	dup ASIOpenCamera ASI.?abort
 	dup ASIInitCamera ASI.?abort
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
