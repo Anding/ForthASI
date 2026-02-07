@@ -12,13 +12,13 @@ TSlength buffer: TSstring
 \ add key value pairs for FITS camara parameters
 	>R
 	s" T"                           R@ =>" SIMPLE"
-	s" 16"                          R@ =>" BITPIX"	
-	s" 1"							R@ =>" BSCALE"
-	s" 32768"                       R@ =>" BZERO"       \ BITBIX=16 is a signed data type in the range -32768 to 32737
+	s" 16"                          R@ =>" BITPIX"
 	s" 2"                           R@ =>" NAXIS"	
 	camera_ROI ( width height bin)
 	rot (.)                         R@ =>" NAXIS1"
 	swap (.)                        R@ =>" NAXIS2"
+	s" 32768"                       R@ =>" BZERO"       \ BITBIX=16 is a signed data type in the range -32768 to 32737
+	s" 1"							R@ =>" BSCALE"	
 	(.) 2dup                        R@ =>" XBINNING"
                                     R@ =>" YBINNING"	
 	camera_offset -1 * (.)          R@ =>" PEDESTAL"                                    			                                    	
