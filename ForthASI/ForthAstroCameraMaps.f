@@ -11,8 +11,7 @@ TSlength buffer: TSstring
 : add-cameraFITS ( map --)
 \ add key value pairs for FITS camara parameters
 	>R
-	s" T"                           R@ =>" SIMPLE"
-	s" 16"                          R@ =>" BITPIX"
+	s" 16"                          R@ =>" BITPIX"      \ note that SIMPLE = T is treated as a header line not a key/value
 	s" 2"                           R@ =>" NAXIS"	
 	camera_ROI ( width height bin)
 	rot (.)                         R@ =>" NAXIS1"
