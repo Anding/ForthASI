@@ -233,6 +233,12 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
 ;
 
+: start-dark-exposure ( --)
+\ initiate an exposure marked as a dark frame by the camera driver
+    wait-camera-free
+    camera.ID -1 ( ID isdark) ASIStartExposure ASI.?abort
+;
+
 : stop-exposure ( --)
 \ stop an exposure as an exception
 	camera.ID ASIStopExposure ASI.?abort

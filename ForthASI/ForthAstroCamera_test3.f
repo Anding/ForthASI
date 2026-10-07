@@ -34,8 +34,8 @@ ASI2600MM_031F add-camera
 ASI2600MM_031F use-camera
 500 ms
 
-camera_pixels 2 * * CONSTANT image_size
-image_size allocate drop CONSTANT image_buffer
+camera_pixels 2 * * CONSTANT frame-size
+frame-size allocate drop CONSTANT image_buffer
 
 1000000 ->camera_exposure
 CR ." exposure_status :" exposure_status $exposure_status type
@@ -43,7 +43,7 @@ start-exposure
 CR ." exposure_status :" exposure_status $exposure_status type 
 wait-camera
 CR ." exposure_status :" exposure_status $exposure_status type 
-CR image_buffer image_size download-image ." downloaded"
+CR image_buffer frame-size download-image ." downloaded"
 CR ." exposure_status :" exposure_status $exposure_status type 
 
 power-is-relay-switched [IF]
