@@ -7,13 +7,6 @@
 \ Operational notes
 \ 	variables over values
 
-: despace ( c-addr u --)
-\ convert spaces to underscore characters
-	over + swap do
-		i c@ BL = if '_' i c! then	
-	loop
-;
-
 : ASI.get-model ( c-addr u -- c-addr u)
 \ extract the model of an ASI camera from the ASI_CAMERA_NAME field
 \ assume that the name is formatted "ZWO ASI[MODEL]"
