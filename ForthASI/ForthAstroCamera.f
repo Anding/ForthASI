@@ -151,12 +151,11 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 : add-camera ( CameraID --)
 \ make a camera available for application use
-\ 	connect the camera and initialize it with a full frame
+\ connect and initialize the SDK without explicitly applying configured controls
     ASIGetNumOfConnectedCameras 0= if s" no connected cameras" cr .>E cr abort then
 	dup ASIOpenCamera ASI.?abort
 	dup ASIInitCamera ASI.?abort
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	camera_pixels 1 ( id width height bin) ASI_IMG_RAW16 ( ...16bit_unsigned) ASISetROIFormat ASI.?abort
 ;
 
 : use-camera ( CameraID --)
@@ -255,12 +254,18 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 \ user lexicon
 
-: check-camera ( --)
+: check-camera { | width height bin -- }
 \ report the current camera to the user
 	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	camera_ROI -> bin -> height -> width
 	CR 
 	." Camera ID = " camera.ID .	
 	." ; Name = " 	camera_name type
+	." ; Gain = " camera_gain .
+	." ; Offset = " camera_offset .
+	." ; Exposure (us) = " camera_exposure .
+	." ; ROI = " width . ." x " height . ." bin " bin .
+	." ; Temperature (C) = " camera_temperature .
 ;
 
 : uSecs ( uS -- uS)
