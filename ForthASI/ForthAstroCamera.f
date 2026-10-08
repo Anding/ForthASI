@@ -152,7 +152,7 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 : add-camera ( CameraID --)
 \ make a camera available for application use
 \ connect and initialize the SDK without explicitly applying configured controls
-    ASIGetNumOfConnectedCameras 0= if s" no connected cameras" cr .>E cr abort then
+    ASIGetNumOfConnectedCameras 0= if s" no connected cameras" .E> abort then
 	dup ASIOpenCamera ASI.?abort
 	dup ASIInitCamera ASI.?abort
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
@@ -165,7 +165,7 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT       
 	camera_name $-> asi.str1 s"  " $+> asi.str1 
 	camera_pixels swap (.) $+> asi.str1 s"  x " $+> asi.str1 (.) $+> asi.str1 s"  pixels" $+> asi.str1  
-	cr asi.str1 .> cr
+	asi.str1 .>
 ;
 
 : remove-camera ( CameraID --)
@@ -258,14 +258,20 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 \ report the current camera to the user
 	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
 	camera_ROI -> bin -> height -> width
-	CR 
-	." Camera ID = " camera.ID .	
-	." ; Name = " 	camera_name type
-	." ; Gain = " camera_gain .
-	." ; Offset = " camera_offset .
-	." ; Exposure (us) = " camera_exposure .
-	." ; ROI = " width . ." x " height . ." bin " bin .
-	." ; Temperature (C) = " camera_temperature .
+	s" Camera" panel{
+	s" ID" camera.ID (.) .field
+	s" Name" camera_name .field
+	s" Gain" camera_gain (.) .field
+	s" Offset" camera_offset (.) .field
+	s" Exposure (us)" camera_exposure (.) .field
+	width (.) $-> asi.str1
+	s"  x " $+> asi.str1
+	height (.) $+> asi.str1
+	s"  bin " $+> asi.str1
+	bin (.) $+> asi.str1
+	s" ROI" asi.str1 .field
+	s" Temperature (C)" camera_temperature (.) .field
+	}panel
 ;
 
 : uSecs ( uS -- uS)
