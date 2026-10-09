@@ -43,7 +43,7 @@ TSlength buffer: TSstring
     s" Gray"                        R@ =>" COLORSPC"
  	camera_offset (.)               R@ =>" OFFSET"	  			
 	R> drop
+	drop
 ;	
 
 	
-

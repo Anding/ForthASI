@@ -156,6 +156,7 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	dup ASIOpenCamera ASI.?abort
 	dup ASIInitCamera ASI.?abort
 	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	drop
 ;
 
 : use-camera ( CameraID --)
