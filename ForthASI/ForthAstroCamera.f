@@ -308,8 +308,8 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
     { x y width height | sensor-width sensor-height -- }
 \ Apply camera size constraints without clipping the requested ideal region.
     camera_pixels -> sensor-height -> sensor-width
-    width 7 + 8 / 8 * sensor-width min -> width
-    height 1+ 2 / 2 * sensor-height min -> height
+    width 7 + 8 / 8 * sensor-width 8 / 8 * min -> width
+    height 1+ 2 / 2 * sensor-height 2 / 2 * min -> height
     x 0 max sensor-width width - min -> x
     y 0 max sensor-height height - min -> y
     width height 1 ->camera_ROI
