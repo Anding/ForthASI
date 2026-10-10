@@ -16,6 +16,9 @@ TSlength buffer: TSstring
 	camera_ROI ( width height bin)
 	rot (.)                         R@ =>" NAXIS1"
 	swap (.)                        R@ =>" NAXIS2"
+	camera_ROI_start
+	swap (.)                        R@ =>" XORGSUBF"
+	(.)                             R@ =>" YORGSUBF"
 	s" 32768"                       R@ =>" BZERO"       \ BITBIX=16 is a signed data type in the range -32768 to 32737
 	s" 1"							R@ =>" BSCALE"	
 	(.) 2dup                        R@ =>" XBINNING"

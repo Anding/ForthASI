@@ -88,6 +88,15 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
  	camera.ID width height bin ASI_IMG_RAW16 ( 16bit unsigned) ASISetROIFormat ASI.?abort
 ;
 
+: camera_ROI_start ( -- x y ) { | x y }
+    camera.ID ADDR x ADDR y ASIGetStartPos ASI.?abort
+    x y
+;
+
+: ->camera_ROI_start { x y -- }
+    camera.ID x y ASISetStartPos ASI.?abort
+;
+
 : camera_binning ( -- bin)
 \ return the camera binning
 	camera_ROI nip nip
@@ -295,16 +304,30 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	->camera_exposure
 ;
 
-: fullframe ( --)
-\ set the camera to take full-frame images, and binning to 1
-    camera_pixels 1 ( width height bin) ->camera_ROI
+: subframe-at
+    { x y width height | sensor-width sensor-height -- }
+\ Apply camera size constraints without clipping the requested ideal region.
+    camera_pixels -> sensor-height -> sensor-width
+    width 7 + 8 / 8 * sensor-width min -> width
+    height 1+ 2 / 2 * sensor-height min -> height
+    x 0 max sensor-width width - min -> x
+    y 0 max sensor-height height - min -> y
+    width height 1 ->camera_ROI
+    x y ->camera_ROI_start
 ;
 
-: subframe ( p | --)
+: fullframe ( --)
+\ set the camera to take full-frame images, and binning to 1
+    0 0 camera_pixels subframe-at
+;
+
+: subframe { p | sensor-width sensor-height size x y -- }
 \ set the subframe to a square p% of the smaller camera dimension, and binning to 1
-    camera_pixels min * 100 /               \ apply percentage
-    8 / 8 *                                 \ width%8 == 0 rule
-    dup 1 ( width height bin) ->camera_ROI 
+    camera_pixels -> sensor-height -> sensor-width
+    sensor-width sensor-height min p * 100 / -> size
+    sensor-width size - 2/ -> x
+    sensor-height size - 2/ -> y
+    x y size size subframe-at
 ;
     
     
