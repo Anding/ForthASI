@@ -1,4 +1,6 @@
 \ Add FITS and XISF keywords to a map
+\ Maintenance: origin keywords describe the applied hardware ROI, not the
+\ caller's unaligned request; query the camera only after ROI setup succeeds.
 NEED Windows
 
 UUIDlength buffer: UUIDstring  

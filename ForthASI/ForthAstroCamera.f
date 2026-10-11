@@ -16,6 +16,10 @@
 \ Operational notes
 \ 	values over variables
 \ 	actions to the presently-selected-camera
+\
+\ Maintenance: ASI ROI width and X origin align to 8 pixels; height and Y
+\ origin align to 2.  subframe-at must expand after alignment so it never
+\ clips the requested sensor region.
 
 s" " $value asi.str1
 
