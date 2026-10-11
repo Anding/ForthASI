@@ -3,8 +3,7 @@ Forth language control of the ZWO ASI series of astroimaging cameras and accesso
 
 Documentation at https://anding.github.io/ForthASI/
 
-`subframe-at ( x y width height -- )` applies an exact sensor region for
-in-memory analysis. It rounds width up to the ASI multiple-of-eight rule,
-rounds height up to an even value, and shifts the origin only when needed to
-remain on the sensor. `XORGSUBF` and `YORGSUBF` record the applied origin in
-FITS/XISF metadata.
+`subframe-at ( x y width height -- )` applies an enclosing sensor region for
+in-memory analysis. It aligns X and width to eight pixels, aligns Y and height
+to two pixels, and expands rather than clips the requested region.
+`XORGSUBF` and `YORGSUBF` record the applied origin in FITS/XISF metadata.

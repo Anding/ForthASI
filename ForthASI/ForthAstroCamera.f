@@ -305,15 +305,22 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 ;
 
 : subframe-at
-    { x y width height | sensor-width sensor-height -- }
-\ Apply camera size constraints without clipping the requested ideal region.
+    { x y width height |
+      sensor-width sensor-height aligned-x aligned-y -- }
+\ Align the origin and expand the ROI so it still encloses the request.
     camera_pixels -> sensor-height -> sensor-width
     width 7 + 8 / 8 * sensor-width 8 / 8 * min -> width
     height 1+ 2 / 2 * sensor-height 2 / 2 * min -> height
     x 0 max sensor-width width - min -> x
     y 0 max sensor-height height - min -> y
+    x 8 / 8 * -> aligned-x
+    y 2 / 2 * -> aligned-y
+    width x aligned-x - + 7 + 8 / 8 *
+        sensor-width aligned-x - min -> width
+    height y aligned-y - + 1+ 2 / 2 *
+        sensor-height aligned-y - min -> height
     width height 1 ->camera_ROI
-    x y ->camera_ROI_start
+    aligned-x aligned-y ->camera_ROI_start
 ;
 
 : fullframe ( --)
