@@ -1,6 +1,6 @@
 \ Hardware-free regression: camera metadata must not consume caller data.
 NEED ForthBase
-NEED forth-map
+NEED ordered-maps
 NEED simple-tester
 
 : camera_ROI ( -- width height bin ) 6248 4176 1 ;
@@ -23,32 +23,33 @@ NEED simple-tester
 
 include "%idir%\ForthAstroCameraMaps.f"
 
-ordered-map constant camera-test-map
-map constant camera-test-dictionary
+allocate-map constant camera-test-map
 
 Tstart
 
 T{ 1234 camera-test-map add-cameraFITS }T 1234 ==
-T{ camera-test-map count-keys }T 32 ==
-T{ s" NAXIS1" camera-test-map >string hashS }T s" 6248" hashS ==
-T{ s" NAXIS2" camera-test-map >string hashS }T s" 4176" hashS ==
-T{ s" XORGSUBF" camera-test-map >string hashS }T s" 16" hashS ==
-T{ s" YORGSUBF" camera-test-map >string hashS }T s" 32" hashS ==
-T{ s" XBINNING" camera-test-map >string hashS }T s" 1" hashS ==
-T{ s" YBINNING" camera-test-map >string hashS }T s" 1" hashS ==
-T{ s" EXPOINUS" camera-test-map >string hashS }T s" 240000000" hashS ==
-T{ s" EXPOINMS" camera-test-map >string hashS }T s" 240000" hashS ==
-T{ s" OFFSET" camera-test-map >string hashS }T s" 20" hashS ==
+T{ camera-test-map map-count }T 32 ==
+T{ s" NAXIS1" camera-test-map map@ hashS }T s" 6248" hashS ==
+T{ s" NAXIS2" camera-test-map map@ hashS }T s" 4176" hashS ==
+T{ s" XORGSUBF" camera-test-map map@ hashS }T s" 16" hashS ==
+T{ s" YORGSUBF" camera-test-map map@ hashS }T s" 32" hashS ==
+T{ s" XBINNING" camera-test-map map@ hashS }T s" 1" hashS ==
+T{ s" YBINNING" camera-test-map map@ hashS }T s" 1" hashS ==
+T{ s" EXPOINUS" camera-test-map map@ hashS }T s" 240000000" hashS ==
+T{ s" EXPOINMS" camera-test-map map@ hashS }T s" 240000" hashS ==
+T{ s" OFFSET" camera-test-map map@ hashS }T s" 20" hashS ==
 
 T{ 1234 camera-test-map reset-map }T 1234 ==
-T{ camera-test-map count-keys }T 0 ==
-T{ 1234 camera-test-map reset-map camera-test-map add-cameraFITS }T 1234 ==
-T{ camera-test-map count-keys }T 32 ==
+T{ camera-test-map map-count }T 32 ==
+T{ s" NAXIS1" camera-test-map map@ }T 0 0 ==
 T{ 1234 camera-test-map add-cameraFITS }T 1234 ==
-T{ camera-test-map count-keys }T 32 ==
-
-T{ 1234 camera-test-dictionary add-cameraFITS }T 1234 ==
-T{ camera-test-dictionary count-keys }T 32 ==
+T{ camera-test-map map-count }T 32 ==
+T{ s" NAXIS1" camera-test-map map@ hashS }T s" 6248" hashS ==
+T{ 1234 camera-test-map erase-map }T 1234 ==
+T{ camera-test-map map-count }T 0 ==
+T{ s" OFFSET" camera-test-map map@ }T 0 0 ==
+T{ 1234 camera-test-map add-cameraFITS }T 1234 ==
+T{ camera-test-map map-count }T 32 ==
 
 camera-test-map free-map
 

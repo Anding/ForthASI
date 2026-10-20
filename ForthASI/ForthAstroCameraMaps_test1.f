@@ -5,7 +5,7 @@ NEED forthbase
 NEED network
 NEED serial
 NEED ForthKMTronic
-NEED forth-map
+NEED ordered-maps
 NEED windows
 
 include "%idir%\ASI_SDK.f"
@@ -30,12 +30,11 @@ ASI2600MM_031F add-camera
 ASI2600MM_031F use-camera
 500 ms
 
-	map-strings
-	map CONSTANT camera_FITSmap
+	allocate-map CONSTANT camera_FITSmap
 	camera_FITSmap add-cameraFITS
 	camera_FITSmap .map
 	
-	map CONSTANT camera_XISFmap
+	allocate-map CONSTANT camera_XISFmap
 	camera_XISFmap add-cameraXISF
 	camera_XISFmap .map
 

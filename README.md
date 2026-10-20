@@ -10,4 +10,4 @@ to two pixels, and expands rather than clips the requested region.
 
 `add-cameraFITS ( map -- )` consumes only the destination map, leaving caller
 data unchanged. `ForthASI\ForthAstroCameraMaps_test2.f` checks this without
-hardware, including standalone calls and ordered-map reset/reuse.
+hardware, including standalone calls, retained-key reset, and erase/reuse.

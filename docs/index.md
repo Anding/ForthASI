@@ -18,7 +18,7 @@ In the spirit of Forth there is no ready-made application! Any interested users 
 
 	<https://github.com/Anding/ForthBase>
 	
-	<https://github.com/uho/forth-map>
+	ForthBase includes the heap-backed ordered string maps (`NEED ordered-maps`).
 
 4. Optional and complementary Forth language libraries
 
@@ -51,7 +51,6 @@ In the spirit of Forth there is no ready-made application! Any interested users 
 Regression testcases are made for all of the Forth language include files.  The testcases are  documentation-by-example of how the Forth language word should be used.  Looking through the testcases is the best way to see how the Forth language may be used to control interactively hardware devices such as astronomical cameras.
 
 The testcases work with hardware and need to be locally reconfigured by users.
-
 
 
 
