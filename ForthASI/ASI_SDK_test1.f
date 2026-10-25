@@ -9,13 +9,13 @@ include "%idir%\ASI_SDK.f"
 .BadExterns CR
 
 VARIABLE CameraID
-VARIABLE ASINumberOfControls
-VARIABLE ControlValue
-VARIABLE ControlAuto
-VARIABLE ROIWidth
-VARIABLE ROIHeight
-VARIABLE ROIBin
-VARIABLE ASIImgType
+VARIABLE ASINumberOfControls 0 ASINumberOfControls !
+VARIABLE ControlValue 0 ControlValue !
+VARIABLE ControlAuto 0 ControlAuto !
+VARIABLE ROIWidth 0 ROIWidth !
+VARIABLE ROIHeight 0 ROIHeight !
+VARIABLE ROIBin 0 ROIBin !
+VARIABLE ASIImgType 0 ASIImgType !
 VARIABLE StartX
 VARIABLE StartY
 
@@ -27,7 +27,8 @@ VARIABLE StartY
 		\ loop over each connected camera
 		0 do
 			." Camera index " i . CR
-			ASICameraInfo i ASIGetCameraProperty ( buffer index --) ASI.?abort
+			ASICameraInfo ASI_CAMERA_INFO erase
+			ASICameraInfo i ASIGetCameraProperty ?dup if ASI.?abort unloop exit then
 			ASICameraInfo ASI_CAMERA_NAME TAB ." ASI_CAMERA_NAME " zcount type CR
 			ASICameraInfo ASI_CAMERA_ID TAB ." ASI_CAMERA_ID " @ dup u. CR
 				CameraID !
@@ -49,14 +50,20 @@ VARIABLE StartY
 			CR
 			
 			\ open the camera and check the number of controls
-			CameraID @ ASIOpenCamera ASI.?abort
-			CameraID @ ASINumberOfControls ASIGetNumOfControls ASI.?abort
+			CameraID @ ASIOpenCamera ?dup if ASI.?abort unloop exit then
+			0 ASINumberOfControls !
+			CameraID @ ASINumberOfControls ASIGetNumOfControls ?dup if
+				ASI.?abort CameraID @ ASICloseCamera ASI.?abort unloop exit
+			then
 			TAB ." Number of controls " ASINumberOfControls @ . CR
 			
 			\ loop over each control and list the control properties and settings
-			ASINumberOfControls @ 0 do
+			ASINumberOfControls @ 0 ?do
 				." Control index " i . CR
-				CameraID @ I ASIControlCaps ASIGetControlCaps ASI.?abort
+				ASIControlCaps ASI_CONTROL_CAPS erase
+				CameraID @ I ASIControlCaps ASIGetControlCaps ?dup if
+					ASI.?abort CameraID @ ASICloseCamera ASI.?abort unloop unloop exit
+				then
 				ASIControlCaps ASI_CONTROL_NAME TAB ." ASI_CONTROL_NAME " zcount type CR
 				ASIControlCaps ASI_CONTROL_DESCRIPTION TAB ." ASI_CONTROL_DESCRIPTION " zcount type CR
 				ASIControlCaps ASI_MAX_VALUE TAB ." ASI_MAX_VALUE " @ . CR			\ note sign extension
@@ -66,6 +73,7 @@ VARIABLE StartY
 				ASIControlCaps ASI_IS_WRITABLE TAB ." ASI_IS_WRITABLE " @ . CR	
 				ASIControlCaps ASI_CONTROL_TYPE TAB ." ASI_CONTROL_TYPE " @ dup . CR	
 				\ list the control setting
+					0 ControlValue ! 0 ControlAuto !
 					CameraID @ swap ControlValue ControlAuto ( CameraID ASI_CONTROL_TYPE &ControlValue &ControlAuto)
 				ASIGetControlValue TAB ASI.?abort
 					TAB TAB ." Control Value " ControlValue @ . CR
@@ -87,7 +95,10 @@ VARIABLE StartY
 			
 			\ get the serial number
 			." Serial Number " CR
-			CameraID @ ASISN ASIGetSerialNumber ASI.?ABORT
+			ASISN ASI_ID erase
+			CameraID @ ASISN ASIGetSerialNumber ?dup if
+				ASI.?abort CameraID @ ASICloseCamera ASI.?abort unloop exit
+			then
 			TAB ASISN @ u. CR
 			
 			\ close the camera
@@ -101,5 +112,4 @@ VARIABLE StartY
 
 CR
 ASI.ReviewCameras
-
 

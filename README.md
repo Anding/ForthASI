@@ -11,3 +11,12 @@ to two pixels, and expands rather than clips the requested region.
 `add-cameraFITS ( map -- )` consumes only the destination map, leaving caller
 data unchanged. `ForthASI\ForthAstroCameraMaps_test2.f` checks this without
 hardware, including standalone calls, retained-key reset, and erase/reuse.
+
+Ordinary SDK errors report and return normally; `ASI.?abort` retains its name
+but does not abort. Failed scalar reads return initialized zero values; a
+failed exposure-status query returns `ASI_EXP_FAILED`. Failed attachment and
+ROI changes skip dependent operations. Exposure start uses the SDK result
+directly: a busy camera reports an error rather than waiting or retrying.
+A later iteration can try again.
+`ForthASI\ForthAstroCamera_test0.f` tests failed reads with SDK mocks and
+no hardware.

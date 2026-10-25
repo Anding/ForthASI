@@ -155,14 +155,10 @@ ASI_CAMERA_INFO     BUFFER: ASICameraInfo
 ASI_CONTROL_CAPS	BUFFER: ASIControlCaps
 ASI_ID				BUFFER: ASIID
 ASI_ID				BUFFER: ASISN
+ASICameraInfo ASI_CAMERA_INFO erase
+ASISN ASI_ID erase
 
-\ do-or-die error handler
+\ Report SDK errors; keep the public name for existing callers.
 : ASI.?abort ( n --)
-	dup 
-	IF 
-		ASI.Error .E>
-		abort 
-	ELSE
-		drop	
-	THEN
+	?dup if ASI.Error cr type cr then
 ;

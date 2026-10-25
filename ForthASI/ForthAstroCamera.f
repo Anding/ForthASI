@@ -49,40 +49,19 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	<camera_temperature> ( temp*10) 5 + 10 /
 ;
 
-: camera_cooler-on
-	1 ->camera_cooler
-;
-
-: camera_cooler-off
-	0 ->camera_cooler
-;
-
-: camera_dew_heater-on
-	1 ->camera_dew_heater
-;
-
-: camera_dew_heater-off
-	0 ->camera_dew_heater
-;
-
-: camera_fan-on
-	1 ->camera_fan
-;
-
-: camera_fan-off
-	0 ->camera_fan
-;
-
-: hardware_bin-on
-	1 ->camera_hardware_bin
-;
-
-: hardware_bin-off
-	0 ->camera_hardware_bin
-;
+ASI_COOLER_ON 1 ASI.switch camera_cooler-on
+ASI_COOLER_ON 0 ASI.switch camera_cooler-off
+ASI_ANTI_DEW_HEATER 1 ASI.switch camera_dew_heater-on
+ASI_ANTI_DEW_HEATER 0 ASI.switch camera_dew_heater-off
+ASI_FAN_ON 1 ASI.switch camera_fan-on
+ASI_FAN_ON 0 ASI.switch camera_fan-off
+ASI_HARDWARE_BIN 1 ASI.switch hardware_bin-on
+ASI_HARDWARE_BIN 0 ASI.switch hardware_bin-off
 
 : camera_ROI ( -- width height bin) { | ROIWidth ROIHeight ROIBin ASIImgType }  \ VFX locals for pass-by-reference
-	camera.ID ADDR ROIWidth ADDR ROIHeight ADDR ROIBin ADDR ASIImgType ASIGetROIFormat ASI.?ABORT
+	0 -> ROIWidth 0 -> ROIHeight 0 -> ROIBin 0 -> ASIImgType
+	camera.ID ADDR ROIWidth ADDR ROIHeight ADDR ROIBin ADDR ASIImgType ASIGetROIFormat
+	?dup if ASI.?abort 0 0 0 exit then
 	ROIWidth ROIHeight ROIBin
 ;
 
@@ -93,7 +72,8 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 ;
 
 : camera_ROI_start ( -- x y ) { | x y }
-    camera.ID ADDR x ADDR y ASIGetStartPos ASI.?abort
+    0 -> x 0 -> y
+    camera.ID ADDR x ADDR y ASIGetStartPos ?dup if ASI.?abort 0 0 exit then
     x y
 ;
 
@@ -108,7 +88,7 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 : ->camera_binning ( bin --)
 \ set the camera binning
-	camera_ROI drop rot ->camera_ROI
+	camera_ROI 0= if 2drop drop exit then rot ->camera_ROI
 ;
 
 : pixel_size ( -- caddr u)
@@ -165,18 +145,20 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 : add-camera ( CameraID --)
 \ make a camera available for application use
 \ connect and initialize the SDK without explicitly applying configured controls
-    ASIGetNumOfConnectedCameras 0= if s" no connected cameras" .E> abort then
-	dup ASIOpenCamera ASI.?abort
-	dup ASIInitCamera ASI.?abort
-	dup ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+    ASIGetNumOfConnectedCameras 0= if drop s" no connected cameras" .E> exit then
+	dup ASIOpenCamera ?dup if ASI.?abort drop exit then
+	dup ASIInitCamera ?dup if ASI.?abort ASICloseCamera ASI.?abort exit then
+	dup ASICameraInfo ASIGetCameraPropertyByID ?dup if
+		ASI.?abort ASICloseCamera ASI.?abort exit
+	then
 	drop
 ;
 
 : use-camera ( CameraID --)
 \ choose the camera to be selected for operations, camera must be added first
 	-> camera.ID
-	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
-	camera.ID ASISN ASIGetSerialNumber ASI.?ABORT       
+	camera.ID ASICameraInfo ASIGetCameraPropertyByID ?dup if ASI.?abort exit then
+	camera.ID ASISN ASIGetSerialNumber ?dup if ASI.?abort exit then
 	camera_name $-> asi.str1 s"  " $+> asi.str1 
 	camera_pixels swap (.) $+> asi.str1 s"  x " $+> asi.str1 (.) $+> asi.str1 s"  pixels" $+> asi.str1  
 	asi.str1 .>
@@ -195,11 +177,13 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	IF	\ loop over each connected camera
 		CR ." ID" tab  ." Handle" tab tab ." Camera" CR
 		0 do
-			ASICameraInfo i ( buffer index) ASIGetCameraProperty  ASI.?abort
+			ASICameraInfo i ASIGetCameraProperty ?dup if ASI.?abort unloop exit then
 			ASICameraInfo ASI_CAMERA_ID @					( ID)
 			dup -> camera.ID .	
-			camera.ID ASIOpenCamera ASI.?abort	
-			camera.ID ASISN ASIGetSerialNumber ASI.?ABORT 
+			camera.ID ASIOpenCamera ?dup if ASI.?abort unloop exit then
+			camera.ID ASISN ASIGetSerialNumber ?dup if
+				ASI.?abort camera.ID ASICloseCamera ASI.?abort unloop exit
+			then
 			camera.ID ASI.make-handle 2dup tab type	( ID c-addr u)
 			($constant)											( --)			
 			camera_name tab type CR
@@ -216,7 +200,8 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 \ 		ASI_EXP_WORKING	\ exposing
 \ 		ASI_EXP_SUCCESS	\ exposure finished and waiting for download
 \ 		ASI_EXP_FAILED	
-	camera.ID ADDR exposureStatus ASIGetExpStatus ASI.?abort
+	ASI_EXP_FAILED -> exposureStatus
+	camera.ID ADDR exposureStatus ASIGetExpStatus ?dup if ASI.?abort ASI_EXP_FAILED exit then
 	exposureStatus
 ;
 
@@ -231,38 +216,31 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 : wait-camera-finished ( --)
 \ synchronous hold until the camera is finished exposing
-	BEGIN
-		exposure_status case
-			ASI_EXP_SUCCESS OF exit ENDOF
-			ASI_EXP_FAILED	OF CR ." Exposure failed" exit ENDOF
-		endcase
-		50 ms
-	AGAIN
+	wait-camera-free
+	exposure_status ASI_EXP_SUCCESS <> if s" Exposure failed or absent" .E> then
 ;	
 
 : start-exposure ( --)
 \ initiate an exposure
-	wait-camera-free
 	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
 ;
 
 : start-dark-exposure ( --)
 \ initiate an exposure marked as a dark frame by the camera driver
-    wait-camera-free
     camera.ID -1 ( ID isdark) ASIStartExposure ASI.?abort
 ;
 
 : stop-exposure ( --)
-\ stop an exposure as an exception
+\ stop an exposure
 	camera.ID ASIStopExposure ASI.?abort
 ;
 
 : download-image ( addr u --)
-	wait-camera-finished
+	wait-camera-free
 	exposure_status ASI_EXP_SUCCESS = IF
 		camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
 	ELSE
-		abort" no image to download"
+		2drop s" no image to download" .E>
 	THEN
 ;
 
@@ -270,7 +248,7 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 : check-camera { | width height bin -- }
 \ report the current camera to the user
-	camera.ID ASICameraInfo ( ID buffer) ASIGetCameraPropertyByID ASI.?abort
+	camera.ID ASICameraInfo ASIGetCameraPropertyByID ?dup if ASI.?abort exit then
 	camera_ROI -> bin -> height -> width
 	s" Camera" panel{
 	s" ID" camera.ID (.) .field
@@ -288,10 +266,9 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	}panel
 ;
 
-: uSecs ( uS -- uS)
 \ convert uS to uS
 \ for syntax consistency only
-;
+synonym uSecs noop ( uS -- uS )
 
 : mSecs ( mS -- uS)
 \ convert uS to mS
@@ -303,16 +280,17 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 	1000000 *
 ;
 
-: duration ( us --)
 \ set the exposure duration
-	->camera_exposure
-;
+synonym duration ->camera_exposure ( us -- )
 
 : subframe-at
     { x y width height |
       sensor-width sensor-height aligned-x aligned-y -- }
 \ Align the origin and expand the ROI so it still encloses the request.
     camera_pixels -> sensor-height -> sensor-width
+    sensor-width 0> sensor-height 0> and 0= if
+        s" No camera sensor dimensions" .E> exit
+    then
     width 7 + 8 / 8 * sensor-width 8 / 8 * min -> width
     height 1+ 2 / 2 * sensor-height 2 / 2 * min -> height
     x 0 max sensor-width width - min -> x
@@ -323,7 +301,8 @@ ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
         sensor-width aligned-x - min -> width
     height y aligned-y - + 1+ 2 / 2 *
         sensor-height aligned-y - min -> height
-    width height 1 ->camera_ROI
+    camera.ID width 8 / 8 * height 2 / 2 * 1 ASI_IMG_RAW16 ASISetROIFormat
+        ?dup if ASI.?abort exit then
     aligned-x aligned-y ->camera_ROI_start
 ;
 

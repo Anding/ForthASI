@@ -26,8 +26,10 @@ VARIABLE StartY
 
 : connectCamera ( -- )
 \ open an initialize a camera
-	CameraID @ ASIOpenCamera ASI.?abort
-	CameraID @ ASIInitCamera ASI.?abort
+	CameraID @ ASIOpenCamera ?dup if ASI.?abort exit then
+	CameraID @ ASIInitCamera ?dup if
+		ASI.?abort CameraID @ ASICloseCamera ASI.?abort exit
+	then
 	CameraID @ 3096 2080 1 ASI_IMG_RAW16 ASISetROIFormat ASI.?abort
 ;
 
@@ -52,8 +54,8 @@ VARIABLE StartY
 \ set the exposure duration and initiate
 	>R
 	CameraID @ ASI_EXPOSURE R@ 0
-	( CameraID ASI_EXPOSURE uS 0) ASISetControlValue ASI.?abort
-	CameraID @ 0 ASIStartExposure ASI.?abort
+	( CameraID ASI_EXPOSURE uS 0) ASISetControlValue ?dup if ASI.?abort R> drop exit then
+	CameraID @ 0 ASIStartExposure ?dup if ASI.?abort R> drop exit then
 	CR ." Exposing..." CR 
 	R> 1000 / 200 + ms										\ allow a 200ms delay after the exposure for the SDK
 ;
@@ -61,7 +63,7 @@ VARIABLE StartY
 : download ( c-addr u -- )
 \ download an exposure into a camera buffer and save it to a file
 	CameraID @ XISFBuffer XISF_DATA XISFDataMaxLen
-	( CameraID addr n) ASIGetDataAfterExp ASI.?abort
+	( CameraID addr n) ASIGetDataAfterExp ?dup if ASI.?abort 2drop exit then
 	( c-addr u) XISF.WriteFile
 ;
 
@@ -77,5 +79,4 @@ prepareBuffer
 s" C:\test\ASI_SDK_test2.XISF" download
 s" C:\test\ASI_SDK_test2.XISF" CR type CR
 disconnectCamera
-
 

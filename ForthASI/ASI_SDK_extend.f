@@ -28,12 +28,9 @@
 ;
 
 : ASI.get-control ( CameraID ASI_CONTROL_TYPE -- value) {  | ControlValue ControlAuto -- } \ VFX unassigned locals
+	0 -> ControlValue 0 -> ControlAuto
 	ADDR ControlValue ADDR ControlAuto ( ID ASI_CONTROL_TYPE &ControlValue &ControlAuto) ASIGetControlValue 
-	case
-		0 of ControlValue endof
-		3 of 0 exit 		endof \ invalid control type, just return 0
-		dup ASI.?Abort
-	endcase
+	?dup if ASI.?abort 0 else ControlValue then
 ;
 
 : ASI.set-control ( CameraID ASI_CONTROL_TYPE value --)
@@ -61,6 +58,10 @@
 	ASI.set-control
 ;
 
+: ASI.switch ( control flag "name" -- )
+	CREATE , ,
+	DOES> dup cell+ @ swap @ camera.ID -rot ASI.set-control
+;
 
 
 
