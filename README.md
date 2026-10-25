@@ -18,5 +18,9 @@ failed exposure-status query returns `ASI_EXP_FAILED`. Failed attachment and
 ROI changes skip dependent operations. Exposure start uses the SDK result
 directly: a busy camera reports an error rather than waiting or retrying.
 A later iteration can try again.
+`(start-exposure) ( -- started? )` and
+`(download-image) ( addr u -- downloaded? )` report errors and return success
+flags for acquisition control flow. The interactive `start-exposure` and
+`download-image` words keep their existing stack effects.
 `ForthASI\ForthAstroCamera_test0.f` tests failed reads with SDK mocks and
 no hardware.

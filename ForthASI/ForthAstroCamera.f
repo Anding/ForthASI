@@ -205,24 +205,33 @@ ASI_HARDWARE_BIN 0 ASI.switch hardware_bin-off
 	exposureStatus
 ;
 
-: wait-camera-free ( --)
-\ synchronous hold until the camera is free
+: (wait-camera-free) ( -- status )
+\ Return the terminal exposure status; a failed SDK read ends this wait.
 	BEGIN
-		exposure_status ASI_EXP_WORKING =
+		exposure_status dup ASI_EXP_WORKING =
 	WHILE
-		50 ms
+		drop 50 ms
 	REPEAT
+;
+
+: wait-camera-free ( -- )
+\ Synchronously wait until the camera is free, reporting SDK errors.
+	(wait-camera-free) drop
 ;
 
 : wait-camera-finished ( --)
 \ synchronous hold until the camera is finished exposing
-	wait-camera-free
-	exposure_status ASI_EXP_SUCCESS <> if s" Exposure failed or absent" .E> then
+	(wait-camera-free) ASI_EXP_SUCCESS <> if s" Exposure failed or absent" .E> then
 ;	
 
-: start-exposure ( --)
-\ initiate an exposure
-	camera.ID 0 ( ID isdark) ASIStartExposure ASI.?abort
+: (start-exposure) ( -- started? )
+\ Report the SDK result and tell acquisition whether the exposure started.
+	camera.ID 0 ( ID isdark) ASIStartExposure dup ASI.?abort 0=
+;
+
+: start-exposure ( -- )
+\ Initiate an exposure and report errors; retain the interactive stack effect.
+	(start-exposure) drop
 ;
 
 : start-dark-exposure ( --)
@@ -235,13 +244,18 @@ ASI_HARDWARE_BIN 0 ASI.switch hardware_bin-off
 	camera.ID ASIStopExposure ASI.?abort
 ;
 
-: download-image ( addr u --)
-	wait-camera-free
-	exposure_status ASI_EXP_SUCCESS = IF
-		camera.ID -rot ( ID addr u) ASIGetDataAfterExp ASI.?abort
+: (download-image) ( addr u -- downloaded? )
+\ Return true only when exposure completion and the SDK download both succeed.
+	(wait-camera-free) ASI_EXP_SUCCESS = IF
+		camera.ID -rot ( ID addr u) ASIGetDataAfterExp dup ASI.?abort 0=
 	ELSE
-		2drop s" no image to download" .E>
+		2drop s" no image to download" .E> false
 	THEN
+;
+
+: download-image ( addr u -- )
+\ Download pixels and report errors; retain the interactive stack effect.
+	(download-image) drop
 ;
 
 \ user lexicon
