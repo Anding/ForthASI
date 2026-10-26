@@ -33,8 +33,8 @@ ASI_COOLER_POWER_PERC	ASI.define-get-control	cooler_power
 ASI_BANDWIDTHOVERLOAD	ASI.define-get-control	camera_bandwidth
 ASI_BANDWIDTHOVERLOAD	ASI.define-set-control	->camera_bandwidth
 ASI_TEMPERATURE			ASI.define-get-control	<camera_temperature>
-ASI_TARGET_TEMP			ASI.define-get-control	target_temperature	\ C
-ASI_TARGET_TEMP			ASI.define-set-control	->target_temperature	\ C
+ASI_TARGET_TEMP			ASI.define-get-control	camera_target_temp	\ C
+ASI_TARGET_TEMP			ASI.define-set-control	->camera_target_temp	\ C
 ASI_COOLER_ON           ASI.define-get-control	camera_cooler
 ASI_COOLER_ON           ASI.define-set-control	->camera_cooler
 ASI_ANTI_DEW_HEATER		ASI.define-get-control	camera_dew_heater

@@ -36,7 +36,7 @@ what-camera?
 	." cooler_power " cooler_power . CR
 	." camera_bandwidth " camera_bandwidth . CR
 	." camera_temperature " camera_temperature . CR
-	." target_temperature " target_temperature . CR
+	." camera_target_temp " camera_target_temp . CR
 	." camera_cooler " camera_cooler . CR
 	." camera_dew_heater " camera_dew_heater . CR
 	." camera_fan " camera_fan . CR 
@@ -50,7 +50,7 @@ CR ." Set some controls" CR
 	1000 ->camera_exposure
 	100 ->camera_offset
 	80 ->camera_bandwidth
-	-5 ->target_temperature
+	-5 ->camera_target_temp
 	camera_cooler-on
 	camera_fan-on
 	camera_dew_heater-on

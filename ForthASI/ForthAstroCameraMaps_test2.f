@@ -13,7 +13,7 @@ NEED simple-tester
 : camera_SN ( -- caddr u ) s" 09501F0300090120" ;
 : electrons_per_adu ( -- caddr u ) s" 0.243" ;
 30 constant camera_temperature
--10 constant target_temperature
+-10 constant camera_target_temp
 1 constant camera_cooler
 50 constant cooler_power
 0 constant camera_fan
