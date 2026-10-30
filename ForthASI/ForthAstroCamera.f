@@ -45,8 +45,8 @@ ASI_HARDWARE_BIN        ASI.define-get-control	camera_hardware_bin
 ASI_HARDWARE_BIN        ASI.define-set-control	->camera_hardware_bin
 
 : camera_temperature
-\ return the camera temperature in integer Celcius
-	<camera_temperature> ( temp*10) 5 + 10 /
+\ Return Celsius rounded to the nearest integer, including sub-zero readings.
+	<camera_temperature> dup 0< if negate 5 + 10 / negate else 5 + 10 / then
 ;
 
 ASI_COOLER_ON 1 ASI.switch camera_cooler-on
@@ -156,8 +156,10 @@ ASI_HARDWARE_BIN 0 ASI.switch hardware_bin-off
 
 : use-camera ( CameraID --)
 \ choose the camera to be selected for operations, camera must be added first
+\ Keep the existing ROI/binning but establish the unsigned 16-bit pixel contract.
 	-> camera.ID
 	camera.ID ASICameraInfo ASIGetCameraPropertyByID ?dup if ASI.?abort exit then
+	camera_ROI dup if ->camera_ROI else 2drop drop then
 	camera.ID ASISN ASIGetSerialNumber ?dup if ASI.?abort exit then
 	camera_name $-> asi.str1 s"  " $+> asi.str1 
 	camera_pixels swap (.) $+> asi.str1 s"  x " $+> asi.str1 (.) $+> asi.str1 s"  pixels" $+> asi.str1  

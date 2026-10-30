@@ -36,7 +36,7 @@ TSlength buffer: TSstring
 	camera_name                     R@ =>" INSTRUME"
  	camera_SN                       R@ =>" INSTRSN"	
  	electrons_per_adu               R@ =>" EGAIN"	
-	camera_temperature (.)          R@ =>" CCD-TEMP"		
+	<camera_temperature> s>f 10e f/ 1 (f.) R@ =>" CCD-TEMP"
 	camera_target_temp (.)          R@ =>" SET-TEMP"
  	camera_cooler (.OnOff)          R@ =>" COOLER"
  	cooler_power (.)                R@ =>" COOLPWR" 	

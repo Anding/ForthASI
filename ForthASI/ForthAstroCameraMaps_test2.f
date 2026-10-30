@@ -12,7 +12,7 @@ NEED simple-tester
 : camera_name ( -- caddr u ) s" ZWO ASI2600MM Pro" ;
 : camera_SN ( -- caddr u ) s" 09501F0300090120" ;
 : electrons_per_adu ( -- caddr u ) s" 0.243" ;
-30 constant camera_temperature
+303 value <camera_temperature>
 -10 constant camera_target_temp
 1 constant camera_cooler
 50 constant cooler_power
@@ -38,6 +38,13 @@ T{ s" YBINNING" camera-test-map map@ hashS }T s" 1" hashS ==
 T{ s" EXPOINUS" camera-test-map map@ hashS }T s" 240000000" hashS ==
 T{ s" EXPOINMS" camera-test-map map@ hashS }T s" 240000" hashS ==
 T{ s" OFFSET" camera-test-map map@ hashS }T s" 20" hashS ==
+T{ s" CCD-TEMP" camera-test-map map@ hashS }T s" 30.3" hashS ==
+T{ s" SET-TEMP" camera-test-map map@ hashS }T s" -10" hashS ==
+
+-7 -> <camera_temperature>
+T{ camera-test-map add-cameraFITS }T ==
+T{ s" CCD-TEMP" camera-test-map map@ hashS }T s" -0.7" hashS ==
+T{ s" SET-TEMP" camera-test-map map@ hashS }T s" -10" hashS ==
 
 T{ 1234 camera-test-map reset-map }T 1234 ==
 T{ camera-test-map map-count }T 32 ==

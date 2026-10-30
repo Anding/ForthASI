@@ -3,6 +3,11 @@ Forth language control of the ZWO ASI series of astroimaging cameras and accesso
 
 Documentation at https://anding.github.io/ForthASI/
 
+`use-camera` establishes RAW16 while retaining the existing ROI and binning.
+It does not apply gain, exposure, cooling or other configured defaults.
+`camera_temperature` rounds signed sensor readings to integer Celsius;
+`CCD-TEMP` retains the SDK's 0.1-degree precision, independently of `SET-TEMP`.
+
 `subframe-at ( x y width height -- )` applies an enclosing sensor region for
 in-memory analysis. It aligns X and width to eight pixels, aligns Y and height
 to two pixels, and expands rather than clips the requested region.

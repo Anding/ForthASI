@@ -10,7 +10,28 @@ ASI_EXP_SUCCESS value test.status
 1 value test.start-error
 1 value test.download-error
 0 value test.downloads
-: ASIGetControlValue ( id type value auto -- ior ) 2drop 2drop 1 ;
+1 value test.control-error
+0 value test.control-value
+: ASIGetControlValue { id control value auto -- ior }
+\ Supply signed SDK control readings without a camera.
+    test.control-value value ! 0 auto ! test.control-error ;
+ASI_IMG_RAW8 value test.format
+0 value test.roi-width
+0 value test.roi-height
+0 value test.roi-bin
+: ASIGetROIFormat { id width height bin format -- ior }
+\ Simulate a cropped, binned camera initially left in RAW8.
+    640 width ! 480 height ! 2 bin ! test.format format ! 0 ;
+: ASISetROIFormat { id width height bin format -- ior }
+\ Record the selected pixel format and geometry.
+    width -> test.roi-width height -> test.roi-height
+    bin -> test.roi-bin format -> test.format 0 ;
+: ASIGetCameraPropertyByID ( id info -- ior )
+\ Supply a minimal camera description without opening a device.
+    dup ASI_CAMERA_INFO erase 2drop 0 ;
+: ASIGetSerialNumber ( id serial -- ior )
+\ Supply a zero serial number for the simulated camera.
+    dup 8 erase 2drop 0 ;
 : ASIGetExpStatus ( id status -- ior )
 \ A one-off failed status read must not be hidden by a second successful query.
     test.status swap ! drop test.status-error 0 -> test.status-error ;
@@ -48,4 +69,19 @@ T{ test.pixels 16 (download-image) test.downloads }T false 1 ==
 0 -> test.download-error
 T{ test.pixels 16 (download-image) test.downloads }T true 2 ==
 T{ 123 test.pixels 16 download-image }T 123 ==
+
+\ Cooling below zero must not introduce truncation towards zero after rounding.
+0 -> test.control-error
+271 -> test.control-value
+T{ camera_temperature }T 27 ==
+-6 -> test.control-value
+T{ camera_temperature }T -1 ==
+-14 -> test.control-value
+T{ camera_temperature }T -1 ==
+-15 -> test.control-value
+T{ camera_temperature }T -2 ==
+
+\ Selecting a camera establishes RAW16 without applying fullframe or bin-one.
+T{ 0 use-camera }T ==
+T{ test.format test.roi-width test.roi-height test.roi-bin }T ASI_IMG_RAW16 640 480 2 ==
 Tend
