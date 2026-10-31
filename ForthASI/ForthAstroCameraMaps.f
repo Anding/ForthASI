@@ -8,9 +8,6 @@ UUIDlength buffer: UUIDstring
 TSlength buffer: TSstring
 
 
-\ the camera driver does not know - this must be set manually or by script
-0 value image_type
-
 : add-cameraFITS ( map --)
 \ add key value pairs for FITS camara parameters
 	>R
