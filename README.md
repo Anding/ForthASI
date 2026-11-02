@@ -27,6 +27,11 @@ failed exposure-status query returns `ASI_EXP_FAILED`. Failed attachment and
 ROI changes skip dependent operations. Exposure start uses the SDK result
 directly: a busy camera reports an error rather than waiting or retrying.
 A later iteration can try again.
+`asi.error.code` and `asi.error.timestamp` latch the latest nonzero SDK failure;
+timestamps use ForthBase UTC Unix epoch seconds. Success never clears them.
+`ASI.reopen?` classifies only closed (4), removed (5), timeout (11) and general
+failure (16) as reopen candidates. Argument/control/ROI/buffer errors are not.
+Application idle service owns acknowledgement and recovery, never this printer.
 `(start-exposure) ( -- started? )` and
 `(download-image) ( addr u -- downloaded? )` report errors and return success
 flags for acquisition control flow. The interactive `start-exposure` and

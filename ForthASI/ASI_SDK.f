@@ -1,6 +1,7 @@
 \ Forth words directly corresponding to the ASI SDK
 NEED ForthBase
 NEED ForthVT100
+NEED windows
 
 LIBRARY: ASICamera2.dll
 
@@ -52,6 +53,11 @@ BEGIN-ENUMS ASI.Error ( n -- caddr u)
 	+" CAMERA_EXPOSURE_IN_PROGRESS" 
 	+" CAMERA_GENERAL_ERROR" 
 	+" CAMERA_INVALID_MODE" 
+    +" CAMERA_GPS_NOT_SUPPORTED"
+    +" CAMERA_GPS_VER_ERR"
+    +" CAMERA_GPS_FPGA_ERR"
+    +" CAMERA_GPS_PARAM_OUT_OF_RANGE"
+    +" CAMERA_GPS_DATA_INVALID"
 END-ENUMS 
 
 BEGIN-STRUCTURE ASI_CAMERA_INFO 		\ 240 bytes including padding
@@ -159,6 +165,18 @@ ASICameraInfo ASI_CAMERA_INFO erase
 ASISN ASI_ID erase
 
 \ Report SDK errors; keep the public name for existing callers.
+0 value asi.error.code       \ Latest nonzero SDK result; service acknowledges it.
+0 value asi.error.timestamp  \ UTC Unix epoch seconds of that result.
+
+: ASI.reopen? ( code -- flag )
+\ Only closed, removed, timeout and general SDK failures justify reopening.
+    dup 4 = over 5 = or over 11 = or swap 16 = or
+;
+
 : ASI.?abort ( n --)
-	?dup if ASI.Error cr type cr then
+\ Latch nonzero failures and report; never recover recursively or clear on success.
+	?dup if
+        dup -> asi.error.code utc-epoch-seconds -> asi.error.timestamp
+        ASI.Error cr type cr
+    then
 ;
