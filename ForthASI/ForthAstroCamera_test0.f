@@ -43,9 +43,27 @@ ASI_IMG_RAW8 value test.format
     drop 2drop test.downloads 1+ -> test.downloads test.download-error ;
 create test.pixels 16 allot
 0 value test.setting
+1 value test.set-error
+32 cells buffer: test.settings
+test.settings 32 cells erase
 : ASISetControlValue ( id control value auto -- ior )
-    drop rot drop 100 * + -> test.setting 1
+\ Record every desired control without reaching the SDK.
+    drop rot drop 2dup swap cells test.settings + !
+    100 * + -> test.setting test.set-error
 ;
+4 value test.controls
+create test.thermal-controls
+ASI_TARGET_TEMP , ASI_COOLER_ON , ASI_FAN_ON , ASI_ANTI_DEW_HEATER ,
+: ASIGetNumOfControls ( id count -- ior )
+\ Advertise the selected thermal-control capability count.
+    test.controls swap ! drop 0 ;
+: ASIGetControlCaps { id index caps -- ior }
+\ Expose writable thermal controls as the real SDK does.
+    index cells test.thermal-controls + @ caps ASI_CONTROL_TYPE !
+    1 caps ASI_IS_WRITABLE ! 0 ;
+: ASISetStartPos ( id x y -- ior )
+\ Keep fullframe configuration hardware-free.
+    3drop 0 ;
 include "%idir%\ASI_SDK_extend.f"
 include "%idir%\ForthAstroCamera.f"
 
@@ -84,4 +102,17 @@ T{ camera_temperature }T -2 ==
 \ Selecting a camera establishes RAW16 without applying fullframe or bin-one.
 T{ 0 use-camera }T ==
 T{ test.format test.roi-width test.roi-height test.roi-bin }T ASI_IMG_RAW16 640 480 2 ==
+\ Explicit configure applies fullframe/bin-one and all advertised thermal controls.
+0 -> test.set-error
+800 ASICameraInfo ASI_MAX_WIDTH ! 600 ASICameraInfo ASI_MAX_HEIGHT !
+T{ 123 configure-camera }T 123 ==
+T{ test.roi-width test.roi-height test.roi-bin test.format }T 800 600 1 ASI_IMG_RAW16 ==
+T{ ASI_GAIN cells test.settings + @ ASI_OFFSET cells test.settings + @
+   ASI_EXPOSURE cells test.settings + @ }T 100 0 5000000 ==
+T{ ASI_TARGET_TEMP cells test.settings + @ ASI_COOLER_ON cells test.settings + @
+   ASI_FAN_ON cells test.settings + @ ASI_ANTI_DEW_HEATER cells test.settings + @ }T 0 1 1 0 ==
+\ Unadvertised controls are skipped, not sent as unsupported SDK requests.
+0 -> test.controls
+99 ASI_FAN_ON cells test.settings + !
+T{ configure-camera ASI_FAN_ON cells test.settings + @ }T 99 ==
 Tend

@@ -23,6 +23,14 @@
 
 s" " $value asi.str1
 
+100 value camera.default.gain             \ Desired gain, not observed state.
+0 value camera.default.offset            \ Desired black-level offset.
+5000000 value camera.default.exposure    \ Microseconds.
+1 value camera.default.cooler            \ SDK boolean: cooling enabled.
+0 value camera.default.temperature       \ Celsius setpoint.
+1 value camera.default.fan               \ SDK boolean: fan enabled.
+0 value camera.default.dew-heater        \ SDK boolean: heater disabled.
+
 ASI_GAIN                ASI.define-get-control camera_gain
 ASI_GAIN                ASI.define-set-control ->camera_gain
 ASI_EXPOSURE            ASI.define-get-control camera_exposure			\ uS
@@ -325,6 +333,34 @@ synonym duration ->camera_exposure ( us -- )
 : fullframe ( --)
 \ set the camera to take full-frame images, and binning to 1
     0 0 camera_pixels subframe-at
+;
+
+: ASI.configure-control { value control | count -- }
+\ Apply optional thermal controls only when the SDK advertises writable support.
+    0 -> count
+    camera.ID ADDR count ASIGetNumOfControls ?dup if ASI.?abort exit then
+    count 0 ?do
+        camera.ID i ASIControlCaps ASIGetControlCaps
+        ?dup if ASI.?abort unloop exit then
+        ASIControlCaps ASI_CONTROL_TYPE @ control = if
+            ASIControlCaps ASI_IS_WRITABLE @ if
+                camera.ID control value ASI.set-control
+            then
+            unloop exit
+        then
+    loop
+;
+
+: configure-camera ( -- )
+\ Apply desired imaging defaults, not a snapshot of the previous camera state.
+    camera.default.gain ->camera_gain
+    camera.default.offset ->camera_offset
+    camera.default.exposure ->camera_exposure
+    fullframe
+    camera.default.temperature ASI_TARGET_TEMP ASI.configure-control
+    camera.default.cooler ASI_COOLER_ON ASI.configure-control
+    camera.default.fan ASI_FAN_ON ASI.configure-control
+    camera.default.dew-heater ASI_ANTI_DEW_HEATER ASI.configure-control
 ;
 
 : subframe { p | sensor-width sensor-height size x y -- }

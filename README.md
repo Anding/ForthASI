@@ -5,6 +5,10 @@ Documentation at https://anding.github.io/ForthASI/
 
 `use-camera` establishes RAW16 while retaining the existing ROI and binning.
 It does not apply gain, exposure, cooling or other configured defaults.
+`configure-camera` applies desired defaults: gain 100, offset 0, five seconds,
+fullframe/bin 1, cooling on at 0 C, fan on and dew heater off. Thermal controls
+are set only when the SDK advertises writable support. `camera.default.*`
+values express policy, never cached hardware state.
 `camera_temperature` rounds signed sensor readings to integer Celsius;
 `CCD-TEMP` retains the SDK's 0.1-degree precision, independently of `SET-TEMP`.
 
