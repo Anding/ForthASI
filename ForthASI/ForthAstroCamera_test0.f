@@ -68,6 +68,9 @@ include "%idir%\ASI_SDK_extend.f"
 include "%idir%\ForthAstroCamera.f"
 
 Tstart
+T{ 5 Secs 2 mins }T 5 120 ==
+T{ 123 5 camera-duration ASI_EXPOSURE cells test.settings + @ }T 123 5000000 ==
+T{ 123 250000 ->camera_exposure ASI_EXPOSURE cells test.settings + @ }T 123 250000 ==
 T{ 123 1 ASI.?abort }T 123 ==
 T{ 123 camera_gain exposure_status }T 123 0 ASI_EXP_FAILED ==
 T{ 123 camera_cooler-on test.setting }T 123 ASI_COOLER_ON 100 + ==

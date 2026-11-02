@@ -299,13 +299,19 @@ synonym uSecs noop ( uS -- uS )
 	1000 *
 ;
 
-: Secs ( S -- uS)
-\ convert S to uS
-	1000000 *
+: Secs ( seconds -- seconds )
+\ Annotate an integer duration in seconds without changing it.
 ;
 
-\ set the exposure duration
-synonym duration ->camera_exposure ( us -- )
+: mins ( minutes -- seconds )
+\ Express a scheduling duration in seconds.
+    60 *
+;
+
+: camera-duration ( seconds -- )
+\ Set the reusable camera exposure from integer seconds; SDK units remain microseconds.
+    1000000 * ->camera_exposure
+;
 
 : subframe-at
     { x y width height |
